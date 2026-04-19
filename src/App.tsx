@@ -51,7 +51,15 @@ export default function App() {
   const [heroImage, setHeroImage] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem('silverback_theme');
+    return saved ? saved === 'dark' : true;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('silverback_theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
+
   const [view, setView] = useState<'SILVERBACK' | 'RENTDMC' | 'TOOLKIT' | 'HOT_BUTTON' | 'ADMIN' | 'AI_LAB'>('SILVERBACK');
   const [data, setData] = useState(INITIAL_DATA);
 
