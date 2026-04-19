@@ -35,6 +35,7 @@ import { GoogleGenAI } from "@google/genai";
 import SmsToolkit from './SmsToolkit';
 import HotButton from './HotButton';
 import AILab from './components/AILab';
+import GillySecurity from './GillySecurity';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
 
@@ -60,7 +61,7 @@ export default function App() {
     localStorage.setItem('silverback_theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
 
-  const [view, setView] = useState<'SILVERBACK' | 'RENTDMC' | 'TOOLKIT' | 'HOT_BUTTON' | 'ADMIN' | 'AI_LAB'>('SILVERBACK');
+  const [view, setView] = useState<'SILVERBACK' | 'RENTDMC' | 'TOOLKIT' | 'HOT_BUTTON' | 'ADMIN' | 'AI_LAB' | 'GILLY_SECURITY'>('SILVERBACK');
   const [data, setData] = useState(INITIAL_DATA);
 
   // Handle URL params for deep linking
@@ -73,6 +74,7 @@ export default function App() {
   }, []);
 
   const [dreadedTask, setDreadedTask] = useState('');
+  const [isSlayed, setIsSlayed] = useState(false);
   const heroRef = useRef(null);
   
   const { scrollYProgress } = useScroll({
@@ -161,6 +163,13 @@ export default function App() {
               >
                 <div className="h-3.5" />
                 <span className="text-[8px] font-bold tracking-[1px] text-center leading-[1.1]">HOT<br/>BUTTONS</span>
+              </button>
+              <button 
+                className={`flex flex-col items-center justify-center gap-0.5 min-w-[70px] ${view === 'GILLY_SECURITY' ? 'active' : ''}`} 
+                onClick={() => setView('GILLY_SECURITY')}
+              >
+                <Shield size={14} className="text-red-500" />
+                <span className="text-[8px] font-bold tracking-[1px] text-center leading-[1.1]">GILLY<br/>SECURITY</span>
               </button>
               <button 
                 className={`flex flex-col items-center justify-center gap-0.5 min-w-[70px] ${view === 'AI_LAB' ? 'active' : ''}`} 
@@ -252,6 +261,12 @@ export default function App() {
                   >
                     🔥 HOT BUTTONS
                   </button>
+                  <button 
+                    className={`text-left ${view === 'GILLY_SECURITY' ? 'silver-gradient' : 'text-dim'}`}
+                    onClick={() => { setView('GILLY_SECURITY'); setIsMenuOpen(false); }}
+                  >
+                    🛡️ GILLY SECURITY
+                  </button>
                 </div>
                 <hr className="border-border" />
                 <a href="#products" onClick={() => setIsMenuOpen(false)}>Products</a>
@@ -262,7 +277,9 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        {view === 'TOOLKIT' ? (
+        {view === 'GILLY_SECURITY' ? (
+          <GillySecurity />
+        ) : view === 'TOOLKIT' ? (
           <SmsToolkit initialTab="form" />
         ) : view === 'ADMIN' ? (
           <SmsToolkit isAdmin={true} initialTab="sms" />
@@ -344,6 +361,75 @@ export default function App() {
           >
             We build practical, reliable AI solutions that reduce the daily chaos and help your business grow with clarity and confidence.
           </motion.p>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 26 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="mt-12 max-w-[500px]"
+          >
+            <div className="flex items-center gap-3 font-mono text-[10px] tracking-[0.3em] text-accent uppercase mb-4">
+              <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+              Phase 01 — The Problem
+            </div>
+            <h3 className="text-xl font-display uppercase tracking-widest mb-6">What keeps you up at night?</h3>
+            <div className="relative group">
+              <div className="relative overflow-visible">
+                <input 
+                  type="text"
+                  placeholder="e.g. Invoicing errors, missed leads, manual reporting..."
+                  className={`w-full bg-transparent border-b border-white/20 py-4 font-light text-xl md:text-2xl outline-none focus:border-accent transition-all pr-12 placeholder:text-dim/30 ${isSlayed ? 'text-dim italic' : 'text-foreground'}`}
+                  value={dreadedTask}
+                  onChange={(e) => { setDreadedTask(e.target.value); if(isSlayed) setIsSlayed(false); }}
+                  onKeyPress={(e) => e.key === 'Enter' && dreadedTask && setIsSlayed(true)}
+                />
+                <AnimatePresence>
+                  {isSlayed && (
+                    <motion.div 
+                      initial={{ pathLength: 0, opacity: 0 }}
+                      animate={{ pathLength: 1, opacity: 1 }}
+                      className="absolute inset-0 pointer-events-none"
+                    >
+                      <svg className="w-full h-full absolute top-0 left-0 overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <motion.path 
+                          d="M-5,60 Q50,40 105,55" 
+                          stroke="#00F0FF" 
+                          strokeWidth="4" 
+                          fill="transparent"
+                          strokeLinecap="round"
+                          initial={{ pathLength: 0 }}
+                          animate={{ pathLength: 1 }}
+                          transition={{ duration: 0.6, ease: "easeOut" }}
+                          style={{ filter: 'drop-shadow(0 0 8px rgba(0,240,255,0.8))' }}
+                        />
+                      </svg>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+              <button 
+                onClick={() => dreadedTask && setIsSlayed(true)}
+                className="absolute right-0 top-1/2 -translate-y-1/2 text-accent opacity-0 group-focus-within:opacity-100 transition-opacity"
+              >
+                <ArrowRight size={24} />
+              </button>
+            </div>
+            
+            <AnimatePresence mode="wait">
+              {isSlayed && (
+                <motion.div 
+                  initial={{ opacity: 0, x: -10 }} 
+                  animate={{ opacity: 1, x: 0 }} 
+                  className="mt-6 p-4 bg-accent/5 border-l-2 border-accent backdrop-blur-sm"
+                >
+                  <p className="text-sm font-light italic silver-gradient flex items-center gap-3">
+                    <Sparkles size={14} className="text-accent shrink-0" />
+                    "Don't lose sleep over {dreadedTask.toLowerCase().split(' ')[0]}... we find the fix."
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
 
           <motion.div 
             initial={{ opacity: 0, y: 26 }}

@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   Image as ImageIcon, Video, Music, Mic, Zap, Search, 
-  MessageSquare, Camera, Sparkles, Settings2, Download, Play, Square, Loader2
+  MessageSquare, Camera, Sparkles, Settings2, Download, Play, Square, Loader2, X
 } from 'lucide-react';
 import { GoogleGenAI } from '@google/genai';
 import { auth, loginWithGoogle, logout, db } from '../lib/firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { collection, addDoc, serverTimestamp, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
 
@@ -113,15 +113,40 @@ function ImageStudio({ user }: { user: User }) {
   const [size, setSize] = useState('1K');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState('');
+  const [gallery, setGallery] = useState<{url: string, prompt: string, id: string}[]>([]);
+  const [selectedImage, setSelectedImage] = useState<{url: string, prompt: string} | null>(null);
+
+  // Fetch previous generations
+  useEffect(() => {
+    const fetchGallery = async () => {
+      try {
+        const q = query(
+          collection(db, 'generations'),
+          where('userId', '==', user.uid),
+          where('type', '==', 'image'),
+          orderBy('createdAt', 'desc'),
+          limit(20)
+        );
+        const snapshot = await getDocs(q);
+        const docs = snapshot.docs.map(doc => ({
+          id: doc.id,
+          url: doc.data().url, // In this demo, we might be storing 'base64_hidden' if real storage isn't used
+          prompt: doc.data().prompt,
+          ...doc.data()
+        })).filter(d => d.url && d.url !== 'base64_hidden');
+        setGallery(docs as any);
+      } catch (e) {
+        console.error("Gallery fetch failed:", e);
+      }
+    };
+    fetchGallery();
+  }, [user.uid]);
   
   // Note: SDK generateImages uses models
   const generate = async () => {
     setLoading(true);
     setResult('');
     try {
-      // In the absence of a dedicated raw api route, we'll try to use generateContent or google genai REST mappings
-      // For images, generateImages is the standard for Imagen 3 in other sdks, but for gemini it's text-to-image
-      // Wait, genai typescript SDK has ai.models.generateImages
       const res = await ai.models.generateImages({
         model,
         prompt: prompt,
@@ -129,18 +154,26 @@ function ImageStudio({ user }: { user: User }) {
           numberOfImages: 1,
           outputMimeType: "image/jpeg",
           aspectRatio: aspect, 
-          // size for pro image can optionally be specified if the SDK allows, otherwise aspect covers dimensions
         }
       });
       const data = res.generatedImages[0].image.imageBytes; // base64
-      setResult(`data:image/jpeg;base64,${data}`);
+      const b64 = `data:image/jpeg;base64,${data}`;
+      setResult(b64);
       
+      const newGen = {
+        url: b64,
+        prompt,
+        id: Date.now().toString()
+      };
+      
+      setGallery(prev => [newGen, ...prev]);
+
       // Save to db
       await addDoc(collection(db, 'generations'), {
         userId: user.uid,
         type: 'image',
         prompt,
-        url: 'base64_hidden', // store small metadata
+        url: b64, // Storing full base64 in demo for immediate gallery persistence
         createdAt: serverTimestamp()
       });
     } catch (e) {
@@ -204,10 +237,95 @@ function ImageStudio({ user }: { user: User }) {
       </div>
       
       {result && (
-        <div className="mt-8 p-4 bg-black/20 rounded-xl border border-border text-center">
-          <img src={result} alt="Generated" className="max-w-full rounded shadow-2xl mx-auto max-h-[500px] object-contain" />
+        <div className="mt-8 p-4 bg-black/20 rounded-xl border border-border text-center overflow-hidden">
+          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
+            <img src={result} alt="Generated" className="max-w-full rounded shadow-2xl mx-auto max-h-[500px] object-contain cursor-zoom-in" onClick={() => setSelectedImage({ url: result, prompt })} />
+            <div className="mt-4 flex justify-center gap-4">
+               <button className="flex items-center gap-2 text-xs text-accent hover:underline" onClick={() => setSelectedImage({ url: result, prompt })}><Search size={14}/> View Full Size</button>
+               <a href={result} download="generation.jpg" className="flex items-center gap-2 text-xs text-dim hover:text-foreground transition-colors"><Download size={14}/> Download</a>
+            </div>
+          </motion.div>
         </div>
       )}
+
+      {/* GALLERY SECTION */}
+      {gallery.length > 0 && (
+        <div className="mt-12 pt-8 border-t border-border">
+          <h3 className="text-xl font-display mb-6 tracking-widest uppercase flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse" />
+            Generation Archive
+          </h3>
+          
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {gallery.map((item, idx) => (
+              <motion.div 
+                key={item.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.05 }}
+                className="group relative aspect-square bg-card border border-border rounded-lg overflow-hidden cursor-pointer"
+                onClick={() => setSelectedImage(item)}
+              >
+                <img 
+                  src={item.url} 
+                  alt={item.prompt} 
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3">
+                   <p className="text-[10px] text-white line-clamp-2 leading-tight">{item.prompt}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* FULL SIZE MODAL */}
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-12 bg-black/90 backdrop-blur-sm"
+            onClick={() => setSelectedImage(null)}
+          >
+            <button 
+              className="absolute top-8 right-8 text-white/50 hover:text-white transition-colors"
+              onClick={(e) => { e.stopPropagation(); setSelectedImage(null); }}
+            >
+              <X size={32} />
+            </button>
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative max-w-full max-h-full flex flex-col items-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img 
+                src={selectedImage.url} 
+                alt="Full Size" 
+                className="max-w-full max-h-[80vh] rounded-lg shadow-2xl object-contain border border-white/10" 
+              />
+              <div className="mt-6 bg-card border border-border p-6 rounded-xl max-w-2xl w-full">
+                <div className="text-[10px] uppercase tracking-widest text-accent mb-2 font-mono">Prompt Metadata</div>
+                <p className="text-sm font-light text-foreground leading-relaxed italic">"{selectedImage.prompt}"</p>
+                <div className="mt-4 flex justify-end">
+                   <a 
+                     href={selectedImage.url} 
+                     download="silverback-generation.jpg"
+                     className="flex items-center gap-2 text-xs bg-white/5 hover:bg-white/10 px-4 py-2 rounded transition-all"
+                   >
+                     <Download size={14} /> Download Image
+                   </a>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
