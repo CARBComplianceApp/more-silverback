@@ -36,6 +36,7 @@ import SmsToolkit from './SmsToolkit';
 import HotButton from './HotButton';
 import AILab from './components/AILab';
 import GillySecurity from './GillySecurity';
+import PcInvestments from './PcInvestments';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
 
@@ -61,7 +62,7 @@ export default function App() {
     localStorage.setItem('silverback_theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
 
-  const [view, setView] = useState<'SILVERBACK' | 'RENTDMC' | 'TOOLKIT' | 'HOT_BUTTON' | 'ADMIN' | 'AI_LAB' | 'GILLY_SECURITY'>('SILVERBACK');
+  const [view, setView] = useState<'SILVERBACK' | 'RENTDMC' | 'TOOLKIT' | 'HOT_BUTTON' | 'ADMIN' | 'AI_LAB' | 'GILLY_SECURITY' | 'PC_INVESTMENTS'>('SILVERBACK');
   const [data, setData] = useState(INITIAL_DATA);
 
   // Handle URL params for deep linking
@@ -92,7 +93,7 @@ export default function App() {
     async function generateHero() {
       try {
         const response = await ai.models.generateContent({
-          model: 'gemini-3.1-flash-image-preview',
+          model: 'gemini-2.5-flash-image',
           contents: {
             parts: [
               {
@@ -123,9 +124,9 @@ export default function App() {
         {/* Navigation */}
         <nav className="fixed top-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-xl border-b border-border px-6 md:px-12 py-3 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <a href="#" className="flex items-center gap-3">
-              <div className="w-9 h-9 flex items-center justify-center rounded bg-zinc-900 border border-white/5 shadow-inner">
-                <span className="text-xl grayscale grayscale-100 brightness-150">🦍</span>
+            <a href="#" className="flex items-center gap-3 group">
+              <div className="w-9 h-9 flex items-center justify-center rounded bg-zinc-900 border border-accent/30 shadow-[0_0_15px_rgba(0,240,255,0.3)] group-hover:shadow-[0_0_20px_rgba(0,240,255,0.5)] transition-all">
+                <span className="text-xl brightness-110 drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]">🦍</span>
               </div>
               <div className="flex flex-col leading-[0.75] mt-1">
                 <span className="font-display text-[22px] tracking-[0.2em] silver-gradient hover:brightness-125 transition-all uppercase">SILVERBACK</span>
@@ -149,6 +150,13 @@ export default function App() {
                 <span className="text-[10px] opacity-70">||</span>
                 <span className="text-[8px] font-bold tracking-[1px]">RENT DMC</span>
                 <span className="text-[10px] opacity-70">||</span>
+              </button>
+              <button 
+                className={`flex flex-col items-center justify-center gap-0.5 min-w-[70px] ${view === 'PC_INVESTMENTS' ? 'active' : ''}`} 
+                onClick={() => setView('PC_INVESTMENTS')}
+              >
+                <TrendingUp size={14} className="text-green-500" />
+                <span className="text-[8px] font-bold tracking-[1px] text-center leading-[1.1]">PC<br/>INVESTMENTS</span>
               </button>
               <button 
                 className={`flex flex-col items-center justify-center gap-0.5 min-w-[70px] ${view === 'TOOLKIT' ? 'active' : ''}`} 
@@ -250,6 +258,12 @@ export default function App() {
                     || RENT DMC DASHBOARD ||
                   </button>
                   <button 
+                    className={`text-left ${view === 'PC_INVESTMENTS' ? 'silver-gradient' : 'text-dim'}`}
+                    onClick={() => { setView('PC_INVESTMENTS'); setIsMenuOpen(false); }}
+                  >
+                    📈 PC INVESTMENTS
+                  </button>
+                  <button 
                     className={`text-left ${view === 'TOOLKIT' ? 'silver-gradient' : 'text-dim'}`}
                     onClick={() => { setView('TOOLKIT'); setIsMenuOpen(false); }}
                   >
@@ -279,6 +293,8 @@ export default function App() {
 
         {view === 'GILLY_SECURITY' ? (
           <GillySecurity />
+        ) : view === 'PC_INVESTMENTS' ? (
+          <PcInvestments />
         ) : view === 'TOOLKIT' ? (
           <SmsToolkit initialTab="form" />
         ) : view === 'ADMIN' ? (

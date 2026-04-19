@@ -108,7 +108,7 @@ function AILabDashboard({ user }: { user: User }) {
 // -----------------------------------------------------
 function ImageStudio({ user }: { user: User }) {
   const [prompt, setPrompt] = useState('A futuristic silverback gorilla wearing sunglasses, cyperpunk lighting');
-  const [model, setModel] = useState('gemini-3.1-flash-image-preview'); // or gemini-3-pro-image-preview
+  const [model, setModel] = useState('gemini-2.5-flash-image'); // Default to faster/more available model
   const [aspect, setAspect] = useState('16:9');
   const [size, setSize] = useState('1K');
   const [loading, setLoading] = useState(false);
@@ -147,17 +147,28 @@ function ImageStudio({ user }: { user: User }) {
     setLoading(true);
     setResult('');
     try {
-      const res = await ai.models.generateImages({
+      // Use generateContent for nano banana series (gemini-2.5 / gemini-3.1)
+      const res = await ai.models.generateContent({
         model,
-        prompt: prompt,
+        contents: { parts: [{ text: prompt }] },
         config: {
-          numberOfImages: 1,
-          outputMimeType: "image/jpeg",
-          aspectRatio: aspect, 
+          imageConfig: {
+            aspectRatio: aspect as any,
+            imageSize: model.includes('3.1') ? size as any : undefined
+          }
         }
       });
-      const data = res.generatedImages[0].image.imageBytes; // base64
-      const b64 = `data:image/jpeg;base64,${data}`;
+
+      let b64 = '';
+      for (const part of res.candidates?.[0]?.content?.parts || []) {
+        if (part.inlineData) {
+          b64 = `data:image/jpeg;base64,${part.inlineData.data}`;
+          break;
+        }
+      }
+
+      if (!b64) throw new Error('No image returned from model');
+      
       setResult(b64);
       
       const newGen = {
@@ -211,7 +222,8 @@ function ImageStudio({ user }: { user: User }) {
           <label className="block">
             <span className="text-xs text-dim">Model</span>
             <select className="w-full bg-black border border-border p-2 rounded mt-1 text-xs" value={model} onChange={e => setModel(e.target.value)}>
-              <option value="gemini-3.1-flash-image-preview">Flash Image (Fast)</option>
+              <option value="gemini-2.5-flash-image">Flash Image (Default)</option>
+              <option value="gemini-3.1-flash-image-preview">Flash Image 3.1 (High Def)</option>
               <option value="gemini-3-pro-image-preview">Pro Image (High Quality)</option>
             </select>
           </label>
