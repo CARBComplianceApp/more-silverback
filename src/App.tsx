@@ -49,6 +49,22 @@ const INITIAL_DATA = [
   { unit: '412', tenant: 'Casey Affleck', rent: 1850, status: 'paid', prop: 'Ruby' },
 ];
 
+const REAL_ESTATE_DATA = [
+  { a: '4821 Oakridge Dr, Sacramento', s: 'Prop tax: $8,240/yr · 1031 eligible', p: '$849K', t: 'HOT' },
+  { a: '112 Harbor Ct, Stockton', s: 'Cash flow +$680/mo · Below market', p: '$415K', t: 'DEAL' },
+  { a: '7721 Greenhaven Dr, Elk Grove', s: 'New construction · Dual HVAC', p: '$920K', t: 'NEW' },
+  { a: '305 Main St, Bay Area', s: 'High demand · Appreciation play', p: '$1.4M', t: 'HOT' },
+];
+
+const CONGRESS_DATA = [
+  { n: 'Pelosi, N.', s: 'NVDA', b: '▲ BUY', a: '$500K–$1M', c: 'text-[#3fb950]' },
+  { n: 'Crenshaw, D.', s: 'LMT', b: '▲ BUY', a: '$250K–$500K', c: 'text-[#3fb950]' },
+  { n: 'Tuberville, T.', s: 'CVX', b: '▼ SELL', a: '$100K–$250K', c: 'text-[#f85149]' },
+  { n: 'Warner, M.', s: 'MSFT', b: '▲ BUY', a: '$1M–$5M', c: 'text-[#3fb950]' },
+  { n: 'Scott, R.', s: 'JPM', b: '▲ BUY', a: '$250K–$500K', c: 'text-[#3fb950]' },
+  { n: 'Lummis, C.', s: 'BTC', b: '▲ BUY', a: '$50K–$100K', c: 'text-[#3fb950]' },
+];
+
 export default function App() {
   const [heroImage, setHeroImage] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -64,6 +80,8 @@ export default function App() {
 
   const [view, setView] = useState<'SILVERBACK' | 'RENTDMC' | 'TOOLKIT' | 'HOT_BUTTON' | 'ADMIN' | 'AI_LAB' | 'GILLY_SECURITY' | 'PC_INVESTMENTS'>('SILVERBACK');
   const [data, setData] = useState(INITIAL_DATA);
+  const [reSearch, setReSearch] = useState('');
+  const [congressSearch, setCongressSearch] = useState('');
 
   // Handle URL params for deep linking
   useEffect(() => {
@@ -528,7 +546,16 @@ export default function App() {
                   <div className="text-[9px] text-[#444] tracking-[2px] uppercase mx-auto">Real Estate Intelligence</div>
                 </div>
                 <div className="p-4">
-                  <div className="bg-[#0d0d0d] border border-border p-2 text-[8px] text-[#383838] tracking-widest mb-2">🔍 &nbsp;Search city, ZIP, or property type...</div>
+                  <div className="relative mb-2">
+                    <Search className="absolute left-2 top-1/2 -translate-y-1/2 text-[#383838]" size={8} />
+                    <input 
+                      type="text"
+                      className="w-full bg-[#0d0d0d] border border-border p-2 pl-6 text-[8px] text-[#888] placeholder-[#383838] tracking-widest outline-none focus:border-dim/30"
+                      placeholder="SEARCH CITY, ZIP, OR TYPE..."
+                      value={reSearch}
+                      onChange={(e) => setReSearch(e.target.value)}
+                    />
+                  </div>
                   <div className="grid grid-cols-2 gap-2 mb-3">
                     {[
                       { n: '247', l: 'Active Listings' },
@@ -542,11 +569,12 @@ export default function App() {
                       </div>
                     ))}
                   </div>
-                  {[
-                    { a: '4821 Oakridge Dr, Sacramento', s: 'Prop tax: $8,240/yr · 1031 eligible', p: '$849K', t: 'HOT' },
-                    { a: '112 Harbor Ct, Stockton', s: 'Cash flow +$680/mo · Below market', p: '$415K', t: 'DEAL' }
-                  ].map((r, i) => (
-                    <div key={i} className="bg-[#0d0d0d] border border-border p-2 mb-2 flex justify-between items-center">
+                  {REAL_ESTATE_DATA.filter(r => 
+                    r.a.toLowerCase().includes(reSearch.toLowerCase()) || 
+                    r.s.toLowerCase().includes(reSearch.toLowerCase()) || 
+                    r.t.toLowerCase().includes(reSearch.toLowerCase())
+                  ).slice(0, 2).map((r, i) => (
+                    <div key={i} className="bg-[#0d0d0d] border border-border p-2 mb-2 flex justify-between items-center animate-fade-in">
                       <div>
                         <div className="text-[10px] text-[#888]">{r.a}</div>
                         <div className="text-[8px] text-[#444] mt-0.5">{r.s}</div>
@@ -594,16 +622,24 @@ export default function App() {
               <div className="w-full max-w-[340px] font-mono border border-[#151d1a] bg-[#060809] overflow-hidden">
                 <div className="flex items-center gap-2 px-3 py-2 bg-[#0d1117] border-b border-[#161b22]">
                   <span className="text-sm font-semibold text-[#e6edf3] tracking-tighter">P<em className="not-italic text-[#3fb950]">c</em></span>
+                  <div className="flex-1 max-w-[120px] ml-4 bg-[#010409] border border-[#30363d] rounded flex items-center px-2 py-1">
+                    <Search size={8} className="text-[#8b949e] mr-1.5" />
+                    <input 
+                      type="text"
+                      className="w-full bg-transparent text-[8px] text-[#e6edf3] outline-none placeholder-[#484f58]"
+                      placeholder="Search member or symbol..."
+                      value={congressSearch}
+                      onChange={(e) => setCongressSearch(e.target.value)}
+                    />
+                  </div>
                   <span className="text-[8px] text-[#3fb950] tracking-[2px] ml-auto">● LIVE</span>
                 </div>
                 <div className="bg-[#d29922]/10 border-l-2 border-[#d29922] p-2.5 m-2.5 text-[9px] text-[#d29922] tracking-tight">⚡ CLUSTER: 9 members bought NVDA this week — AI bill vote pending</div>
-                {[
-                  { n: 'Pelosi, N.', s: 'NVDA', b: '▲ BUY', a: '$500K–$1M', c: 'text-[#3fb950]' },
-                  { n: 'Crenshaw, D.', s: 'LMT', b: '▲ BUY', a: '$250K–$500K', c: 'text-[#3fb950]' },
-                  { n: 'Tuberville, T.', s: 'CVX', b: '▼ SELL', a: '$100K–$250K', c: 'text-[#f85149]' },
-                  { n: 'Warner, M.', s: 'MSFT', b: '▲ BUY', a: '$1M–$5M', c: 'text-[#3fb950]' }
-                ].map((r, i) => (
-                  <div key={i} className="flex justify-between items-center px-2.5 py-2 border-b border-[#0d1117] text-[9px]">
+                {CONGRESS_DATA.filter(r => 
+                  r.n.toLowerCase().includes(congressSearch.toLowerCase()) || 
+                  r.s.toLowerCase().includes(congressSearch.toLowerCase())
+                ).slice(0, 4).map((r, i) => (
+                  <div key={i} className="flex justify-between items-center px-2.5 py-2 border-b border-[#0d1117] text-[9px] animate-fade-in">
                     <span className="text-[#8b949e]">{r.n}</span>
                     <span className="text-[#58a6ff] font-semibold">{r.s}</span>
                     <span className={`${r.c} font-semibold text-[8px]`}>{r.b}</span>
