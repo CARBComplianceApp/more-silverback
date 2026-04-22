@@ -117,7 +117,7 @@ export default function SmsToolkit({ initialTab = 'sms', isAdmin = false }: { in
           <div className="logo-hex w-9 h-9 flex items-center justify-center text-background font-bold text-lg shadow-[0_0_16px_rgba(200,200,200,0.14)]">🦍</div>
           <span className="font-display text-2xl md:text-3xl tracking-[0.2em] silver-gradient uppercase">Silverback AI</span>
         </div>
-        <div className="font-mono text-[10px] tracking-widest text-accent border border-[var(--color-accent)]/30 px-3 py-1.5 uppercase mt-4 md:mt-0">
+        <div className="font-mono text-[12px] tracking-widest text-accent border border-[var(--color-accent)]/30 px-3 py-1.5 uppercase mt-4 md:mt-0">
           {isAdmin ? '// SMS Funnel Toolkit' : '// Initial Intake'}
         </div>
       </div>
@@ -158,15 +158,15 @@ export default function SmsToolkit({ initialTab = 'sms', isAdmin = false }: { in
               {AUDIT_GUIDE.map((g, i) => (
                 <div key={i} className="bg-card border border-border p-8 relative overflow-hidden group">
                   <div className="absolute top-[-20px] right-[-10px] text-[80px] font-display text-border/40 group-hover:text-accent/10 transition-colors select-none pointer-events-none">{g.step}</div>
-                  <div className="font-mono text-[10px] tracking-[0.3em] text-accent uppercase mb-4">// Step {g.step}</div>
+                  <div className="font-mono text-[12px] tracking-[0.3em] text-accent uppercase mb-4">// Step {g.step}</div>
                   <h3 className="font-display text-2xl tracking-widest uppercase mb-4 pr-12">{g.title}</h3>
                   <div className="space-y-4 relative z-10">
                     <div>
-                      <span className="font-mono text-[9px] uppercase text-dim block mb-1">Primary Action:</span>
+                      <span className="font-mono text-[11px] uppercase text-dim block mb-1">Primary Action:</span>
                       <p className="text-sm font-medium text-foreground leading-relaxed">{g.action}</p>
                     </div>
                     <div>
-                      <span className="font-mono text-[9px] uppercase text-dim block mb-1">Our Goal:</span>
+                      <span className="font-mono text-[11px] uppercase text-dim block mb-1">Our Goal:</span>
                       <p className="text-sm font-light text-dim leading-relaxed">{g.goal}</p>
                     </div>
                     <div className="bg-accent/5 border-l border-accent p-3 mt-4 italic text-[11px] text-accent font-light">

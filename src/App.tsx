@@ -29,14 +29,17 @@ import {
   Sun,
   Moon,
   Send,
-  Sparkles
+  Sparkles,
+  Languages
 } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
+import { translations, Language } from './translations';
 import SmsToolkit from './SmsToolkit';
 import HotButton from './HotButton';
 import AILab from './components/AILab';
 import GillySecurity from './GillySecurity';
 import PcInvestments from './PcInvestments';
+import ShowcasePage from './components/ShowcasePage';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
 
@@ -78,7 +81,9 @@ export default function App() {
     localStorage.setItem('silverback_theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
 
-  const [view, setView] = useState<'SILVERBACK' | 'RENTDMC' | 'TOOLKIT' | 'HOT_BUTTON' | 'ADMIN' | 'AI_LAB' | 'GILLY_SECURITY' | 'PC_INVESTMENTS'>('SILVERBACK');
+  const [view, setView] = useState<'SILVERBACK' | 'RENTDMC' | 'TOOLKIT' | 'HOT_BUTTON' | 'ADMIN' | 'AI_LAB' | 'GILLY_SECURITY' | 'PC_INVESTMENTS' | 'SHOWCASE'>('SILVERBACK');
+  const [lang, setLang] = useState<Language>('EN');
+  const t = translations[lang];
   const [data, setData] = useState(INITIAL_DATA);
   const [reSearch, setReSearch] = useState('');
   const [congressSearch, setCongressSearch] = useState('');
@@ -158,66 +163,45 @@ export default function App() {
                 className={`flex flex-col items-center justify-center gap-0.5 min-w-[70px] ${view === 'SILVERBACK' ? 'active-portal' : ''}`} 
                 onClick={() => setView('SILVERBACK')}
               >
-                <span className="text-[14px]">🦍</span>
-                <span className="text-[8px] font-bold tracking-[2px]">PORTAL</span>
+                <div className="text-[16px]">🦍</div>
+                <div className="text-[10px] font-bold tracking-[2px] whitespace-pre-line text-center">{t.nav.problemSolver}</div>
+              </button>
+              <button 
+                className={`flex flex-col items-center justify-center gap-0.5 min-w-[70px] ${view === 'SHOWCASE' ? 'active-portal' : ''}`} 
+                onClick={() => setView('SHOWCASE')}
+              >
+                <div className="text-[16px]">⚡</div>
+                <div className="text-[10px] font-bold tracking-[2px] whitespace-pre-line text-center">{t.nav.clientTools}</div>
               </button>
               <button 
                 className={`flex flex-col items-center justify-center gap-0.5 min-w-[70px] ${view === 'RENTDMC' ? 'active' : ''}`} 
                 onClick={() => setView('RENTDMC')}
               >
-                <span className="text-[10px] opacity-70">||</span>
-                <span className="text-[8px] font-bold tracking-[1px]">RENT DMC</span>
-                <span className="text-[10px] opacity-70">||</span>
-              </button>
-              <button 
-                className={`flex flex-col items-center justify-center gap-0.5 min-w-[70px] ${view === 'PC_INVESTMENTS' ? 'active' : ''}`} 
-                onClick={() => setView('PC_INVESTMENTS')}
-              >
-                <TrendingUp size={14} className="text-green-500" />
-                <span className="text-[8px] font-bold tracking-[1px] text-center leading-[1.1]">PC<br/>INVESTMENTS</span>
+                <span className="text-[12px] opacity-70">||</span>
+                <span className="text-[10px] font-bold tracking-[1px]">{t.nav.rentDmc}</span>
+                <span className="text-[12px] opacity-70">||</span>
               </button>
               <button 
                 className={`flex flex-col items-center justify-center gap-0.5 min-w-[70px] ${view === 'TOOLKIT' ? 'active' : ''}`} 
                 onClick={() => setView('TOOLKIT')}
               >
                 <Zap size={14} className="text-orange-400" />
-                <span className="text-[8px] font-bold tracking-[1px] text-center leading-[1.1]">INTAKE<br/>& AUDIT</span>
-              </button>
-              <button 
-                className={`flex flex-col items-center justify-center gap-0.5 min-w-[70px] ${view === 'HOT_BUTTON' ? 'active' : ''}`} 
-                onClick={() => setView('HOT_BUTTON')}
-              >
-                <div className="h-3.5" />
-                <span className="text-[8px] font-bold tracking-[1px] text-center leading-[1.1]">HOT<br/>BUTTONS</span>
-              </button>
-              <button 
-                className={`flex flex-col items-center justify-center gap-0.5 min-w-[70px] ${view === 'GILLY_SECURITY' ? 'active' : ''}`} 
-                onClick={() => setView('GILLY_SECURITY')}
-              >
-                <Shield size={14} className="text-red-500" />
-                <span className="text-[8px] font-bold tracking-[1px] text-center leading-[1.1]">GILLY<br/>SECURITY</span>
-              </button>
-              <button 
-                className={`flex flex-col items-center justify-center gap-0.5 min-w-[70px] ${view === 'AI_LAB' ? 'active' : ''}`} 
-                onClick={() => setView('AI_LAB')}
-              >
-                <Sparkles size={14} className="text-accent" />
-                <span className="text-[8px] font-bold tracking-[1px] text-center leading-[1.1]">AI<br/>LAB</span>
+                <span className="text-[10px] font-bold tracking-[1px] text-center leading-[1.1] whitespace-pre-line">{t.nav.requestAudit}</span>
               </button>
               <button 
                 className={`flex flex-col items-center justify-center gap-0.5 min-w-[70px] ${view === 'ADMIN' ? 'active' : ''}`} 
                 onClick={() => setView('ADMIN')}
               >
                 <Lock size={14} className="opacity-60" />
-                <span className="text-[8px] font-bold tracking-[1px]">ADMIN</span>
+                <span className="text-[10px] font-bold tracking-[1px]">{t.nav.admin}</span>
               </button>
             </div>
 
           <div className="flex items-center gap-4 md:gap-8">
             {view === 'SILVERBACK' && (
               <div className="hidden md:flex items-center gap-20 mr-12 text-[12px] font-mono tracking-[0.3em] uppercase text-dim">
-                <a href="#products" className="hover:text-accent transition-colors">Products</a>
-                <a href="#industries" className="hover:text-accent transition-colors">Industries</a>
+                <a href="#intake" className="hover:text-accent transition-colors">{t.nav.questionnaire}</a>
+                <button onClick={() => setView('SHOWCASE')} className="hover:text-accent transition-colors">{lang === 'EN' ? 'Client Tools' : 'Herramientas'}</button>
               </div>
             )}
 
@@ -229,6 +213,15 @@ export default function App() {
 
             <div className="flex items-center gap-3">
               <button 
+                onClick={() => setLang(lang === 'EN' ? 'ES' : 'EN')}
+                className="flex items-center gap-2 p-2 rounded-full hover:bg-card transition-colors text-dim font-mono text-[10px] tracking-widest"
+                title={lang === 'EN' ? 'Switch to Spanish' : 'Cambiar a Inglés'}
+              >
+                <Languages size={18} />
+                <span className="hidden xs:inline">{lang}</span>
+              </button>
+
+              <button 
                 onClick={() => setIsDarkMode(!isDarkMode)}
                 className="p-2 rounded-full hover:bg-card transition-colors text-dim"
               >
@@ -238,10 +231,10 @@ export default function App() {
               {view === 'SILVERBACK' && (
                 <a 
                   href="#intake" 
-                  className="hidden sm:block font-mono text-[10px] tracking-[0.2em] uppercase px-6 py-3 bg-silver-gradient text-background font-medium transition-all hover:shadow-[0_0_26px_rgba(200,200,200,0.24)] hover:-translate-y-0.5"
+                  className="hidden sm:block font-mono text-[12px] tracking-[0.2em] uppercase px-6 py-3 bg-silver-gradient text-background font-medium transition-all hover:shadow-[0_0_26px_rgba(200,200,200,0.24)] hover:-translate-y-0.5"
                   style={{ background: 'linear-gradient(135deg,#fff 0%,#a0a0a0 35%,#d8d8d8 60%,#787878 100%)' }}
                 >
-                  Free Discovery →
+                  {t.nav.requestAuditBtn}
                 </a>
               )}
             </div>
@@ -264,46 +257,38 @@ export default function App() {
               <div className="flex flex-col gap-8 text-2xl font-display font-bold uppercase tracking-widest">
                 <div className="flex flex-col gap-4 mb-4">
                   <button 
-                    className={`text-left ${view === 'SILVERBACK' ? 'silver-gradient' : 'text-dim'}`}
+                    className={`text-left ${view === 'SILVERBACK' ? 'silver-gradient' : 'text-dim'} text-4xl`}
                     onClick={() => { setView('SILVERBACK'); setIsMenuOpen(false); }}
                   >
-                    🦍 SILVERBACK PORTAL
+                    🦍 {t.nav.problemSolver.replace('\n', ' ')}
                   </button>
                   <button 
-                    className={`text-left ${view === 'RENTDMC' ? 'silver-gradient' : 'text-dim'}`}
+                    className={`text-left ${view === 'SHOWCASE' ? 'silver-gradient' : 'text-dim'} text-4xl`}
+                    onClick={() => { setView('SHOWCASE'); setIsMenuOpen(false); }}
+                  >
+                    ⚡ {t.nav.clientTools.replace('\n', ' ')}
+                  </button>
+                  <button 
+                    className={`text-left ${view === 'RENTDMC' ? 'silver-gradient' : 'text-dim'} text-4xl`}
                     onClick={() => { setView('RENTDMC'); setIsMenuOpen(false); }}
                   >
-                    || RENT DMC DASHBOARD ||
+                    || {t.nav.rentDmc} ||
                   </button>
                   <button 
-                    className={`text-left ${view === 'PC_INVESTMENTS' ? 'silver-gradient' : 'text-dim'}`}
-                    onClick={() => { setView('PC_INVESTMENTS'); setIsMenuOpen(false); }}
-                  >
-                    📈 PC INVESTMENTS
-                  </button>
-                  <button 
-                    className={`text-left ${view === 'TOOLKIT' ? 'silver-gradient' : 'text-dim'}`}
+                    className={`text-left ${view === 'TOOLKIT' ? 'silver-gradient' : 'text-dim'} text-4xl`}
                     onClick={() => { setView('TOOLKIT'); setIsMenuOpen(false); }}
                   >
-                    ⚡ INTAKE & AUDIT
+                    ⚡ {t.nav.requestAudit.replace('\n', ' ')}
                   </button>
                   <button 
-                    className={`text-left ${view === 'HOT_BUTTON' ? 'silver-gradient' : 'text-dim'}`}
-                    onClick={() => { setView('HOT_BUTTON'); setIsMenuOpen(false); }}
+                    className={`text-left ${view === 'ADMIN' ? 'silver-gradient' : 'text-dim'} text-4xl`}
+                    onClick={() => { setView('ADMIN'); setIsMenuOpen(false); }}
                   >
-                    🔥 HOT BUTTONS
-                  </button>
-                  <button 
-                    className={`text-left ${view === 'GILLY_SECURITY' ? 'silver-gradient' : 'text-dim'}`}
-                    onClick={() => { setView('GILLY_SECURITY'); setIsMenuOpen(false); }}
-                  >
-                    🛡️ GILLY SECURITY
+                    🔒 {t.nav.admin}
                   </button>
                 </div>
                 <hr className="border-border" />
-                <a href="#products" onClick={() => setIsMenuOpen(false)}>Products</a>
-                <a href="#industries" onClick={() => setIsMenuOpen(false)}>Industries</a>
-                <a href="#intake" onClick={() => setIsMenuOpen(false)}>Contact</a>
+                <a href="#intake" onClick={() => setIsMenuOpen(false)} className="text-3xl silver-gradient">{t.nav.questionnaire}</a>
               </div>
             </motion.div>
           )}
@@ -318,9 +303,11 @@ export default function App() {
         ) : view === 'ADMIN' ? (
           <SmsToolkit isAdmin={true} initialTab="sms" />
         ) : view === 'AI_LAB' ? (
-          <AILab />
+          <AILab user={{} as any} />
         ) : view === 'HOT_BUTTON' ? (
           <HotButton />
+        ) : view === 'SHOWCASE' ? (
+          <ShowcasePage onBack={() => setView('SILVERBACK')} onSelectTool={(v: any) => setView(v)} />
         ) : view === 'SILVERBACK' ? (
           <>
             {/* Hero Section */}
@@ -358,7 +345,7 @@ export default function App() {
             className="flex items-center gap-3 font-mono text-[11px] tracking-[0.4em] text-accent/60 uppercase mb-8"
           >
             <div className="w-7 h-[1px] bg-accent/30" />
-            AI Partnering with Passionate Businesses
+            {t.hero.sub}
           </motion.div>
           
           <motion.h1
@@ -368,13 +355,13 @@ export default function App() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="font-display text-[clamp(42px,7vw,110px)] leading-[0.95] tracking-[1px] text-foreground uppercase"
           >
-            <div className="w-full text-balance mb-4">BETTER DAYS.</div>
+            <div className="w-full text-balance mb-4">{t.hero.title1}</div>
             
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mt-2 w-full">
-              <span className="silver-gradient italic leading-[1.0] lg:text-[clamp(42px,7vw,110px)]">SMARTER BUSINESS.</span>
+              <span className="silver-gradient italic leading-[1.0] lg:text-[clamp(42px,7vw,110px)]">{t.hero.title2}</span>
               
               <div className="hidden lg:block font-sans text-[13px] normal-case tracking-normal text-dim font-light max-w-[180px] leading-[1.6] pb-2 text-wrap text-right">
-                Simplified, transparent AI systems starting with a <strong className="font-medium text-foreground">$500 discovery audit.</strong>
+                {lang === 'EN' ? 'Simplified, transparent AI systems starting with a' : 'Sistemas de IA simplificados y transparentes que comienzan con una'} <strong className="font-medium text-foreground">{lang === 'EN' ? '$500 discovery audit.' : 'auditoría de descubrimiento de $500.'}</strong>
               </div>
             </div>
           </motion.h1>
@@ -385,7 +372,7 @@ export default function App() {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-lg md:text-xl font-medium text-foreground mt-10 max-w-[620px] leading-[1.6]"
           >
-            We handle the repetitive tasks that drain your energy, so you can focus on <span className="hero-highlight">the work you actually love.</span>
+            {t.hero.repTasks} <span className="hero-highlight">{t.hero.actuallyLove}</span>
           </motion.p>
           <motion.p 
             initial={{ opacity: 0, y: 26 }}
@@ -393,7 +380,7 @@ export default function App() {
             transition={{ duration: 0.8, delay: 0.7 }}
             className="text-base text-dim font-light mt-4 max-w-[620px] leading-[1.6]"
           >
-            We build practical, reliable AI solutions that reduce the daily chaos and help your business grow with clarity and confidence.
+            {t.hero.reliable}
           </motion.p>
 
           <motion.div 
@@ -404,14 +391,14 @@ export default function App() {
           >
             <div className="flex items-center gap-3 font-mono text-[10px] tracking-[0.3em] text-accent uppercase mb-4">
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-              Phase 01 — The Problem
+              {t.hero.phase01}
             </div>
-            <h3 className="text-xl font-display uppercase tracking-widest mb-6">What keeps you up at night?</h3>
+            <h3 className="text-xl font-display uppercase tracking-widest mb-6">{t.hero.nightTitle}</h3>
             <div className="relative group">
               <div className="relative overflow-visible">
                 <input 
                   type="text"
-                  placeholder="e.g. Invoicing errors, missed leads, manual reporting..."
+                  placeholder={t.hero.placeholder}
                   className={`w-full bg-transparent border-b border-white/20 py-4 font-light text-xl md:text-2xl outline-none focus:border-accent transition-all pr-12 placeholder:text-dim/30 ${isSlayed ? 'text-dim italic' : 'text-foreground'}`}
                   value={dreadedTask}
                   onChange={(e) => { setDreadedTask(e.target.value); if(isSlayed) setIsSlayed(false); }}
@@ -458,7 +445,7 @@ export default function App() {
                 >
                   <p className="text-sm font-light italic silver-gradient flex items-center gap-3">
                     <Sparkles size={14} className="text-accent shrink-0" />
-                    "Don't lose sleep over {dreadedTask.toLowerCase().split(' ')[0]}... we find the fix."
+                    "{t.hero.slayedText1}{dreadedTask.toLowerCase().split(' ')[0]}{t.hero.slayedText2}"
                   </p>
                 </motion.div>
               )}
@@ -473,16 +460,16 @@ export default function App() {
           >
             <button 
               onClick={() => setView('TOOLKIT')}
-              className="inline-flex items-center gap-3 bg-silver-gradient text-background font-mono text-[11px] tracking-[2px] uppercase px-8 py-4 font-medium transition-all hover:shadow-[0_0_32px_rgba(200,200,200,0.26)] hover:-translate-y-0.5"
+              className="inline-flex items-center gap-3 bg-silver-gradient text-background font-mono text-[12px] tracking-[2px] uppercase px-8 py-4 font-medium transition-all hover:shadow-[0_0_32px_rgba(200,200,200,0.26)] hover:-translate-y-0.5"
               style={{ background: 'linear-gradient(135deg,#fff 0%,#a0a0a0 35%,#d8d8d8 60%,#787878 100%)' }}
             >
-              Take Free Initial Intake →
+              {t.hero.startBtn}
             </button>
             <a 
               href="#products" 
               className="inline-flex items-center gap-3 bg-transparent text-sm font-mono text-[11px] tracking-[2px] uppercase px-8 py-4 border border-border transition-all hover:border-accent hover:bg-card"
             >
-              See Our Work
+              {t.hero.seeWork}
             </a>
           </motion.div>
 
@@ -494,13 +481,13 @@ export default function App() {
           >
             {[
               { val: '24H', label: 'Response' },
-              { val: 'FREE', label: 'Discovery' },
+              { val: 'ROI', label: 'Focused' },
               { val: '100%', label: 'Custom Built' },
               { val: '∞', label: 'Industries' }
             ].map((stat, i) => (
               <div key={i}>
                 <div className="font-display text-3xl silver-gradient-2">{stat.val}</div>
-                <div className="font-mono text-[9px] tracking-[2px] text-dimmer uppercase mt-1">{stat.label}</div>
+                <div className="font-mono text-[11px] tracking-[2px] text-dimmer uppercase mt-1">{stat.label}</div>
               </div>
             ))}
           </motion.div>
@@ -510,8 +497,10 @@ export default function App() {
       {/* Ticker */}
       <div className="bg-silver-gradient py-4 overflow-hidden" style={{ background: 'linear-gradient(135deg,#fff 0%,#a0a0a0 35%,#d8d8d8 60%,#787878 100%)' }}>
         <div className="flex whitespace-nowrap animate-[scroll_28s_linear_infinite]">
-          {Array(4).fill([
+          {Array(4).fill(lang === 'EN' ? [
             'What Keeps You Up At Night', 'We Have The Solution', 'Real Estate', 'Law Firms', 'Flooring', 'Congressional Trades', 'Home Remodeling', 'Any Industry', 'Deployed Fast'
+          ] : [
+            '¿Qué te quita el sueño?', 'Tenemos la solución', 'Bienes Raíces', 'Bufetes de Abogados', 'Pisos', 'Transacciones del Congreso', 'Remodelación de Hogares', 'Cualquier Industria', 'Despliegue Rápido'
           ]).flat().map((text, i) => (
             <div key={i} className="font-display text-[17px] tracking-[4px] text-background px-8 flex items-center gap-4 border-r border-black/10">
               {text}
@@ -521,196 +510,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* Products Section */}
-      <section id="products" className="pt-20">
-        <div className="px-6 md:px-12 mb-10">
-          <div className="flex items-center gap-3 font-mono text-[10px] tracking-[4px] text-dim uppercase mb-3">
-            <div className="w-5 h-[1px] bg-dimmer" />
-            What We Build
-          </div>
-          <h2 className="font-display text-[clamp(38px,5vw,62px)] leading-none tracking-[2px] text-foreground">
-            Real Products.<br /><span className="silver-gradient">Real Results.</span>
-          </h2>
-        </div>
-
-        <div className="flex flex-col gap-[2px] bg-card">
-          {/* REAL ESTATE */}
-          <div className="bg-card grid lg:grid-cols-2 min-h-[460px] relative overflow-hidden group hover:bg-background transition-colors">
-            <div className="absolute top-0 left-0 right-0 h-[1px] bg-silver-gradient scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500" />
-            <div className="p-9 flex items-center justify-center bg-background border-r border-border">
-              <div className="w-full max-w-[340px] font-mono border border-border bg-[#0a0a0a] overflow-hidden">
-                <div className="flex items-center gap-2 px-3 py-2 bg-[#111] border-b border-border">
-                  <div className="w-2 h-2 rounded-full bg-[#f85149]" />
-                  <div className="w-2 h-2 rounded-full bg-[#d29922]" />
-                  <div className="w-2 h-2 rounded-full bg-[#3fb950]" />
-                  <div className="text-[9px] text-[#444] tracking-[2px] uppercase mx-auto">Real Estate Intelligence</div>
-                </div>
-                <div className="p-4">
-                  <div className="relative mb-2">
-                    <Search className="absolute left-2 top-1/2 -translate-y-1/2 text-[#383838]" size={8} />
-                    <input 
-                      type="text"
-                      className="w-full bg-[#0d0d0d] border border-border p-2 pl-6 text-[8px] text-[#888] placeholder-[#383838] tracking-widest outline-none focus:border-dim/30"
-                      placeholder="SEARCH CITY, ZIP, OR TYPE..."
-                      value={reSearch}
-                      onChange={(e) => setReSearch(e.target.value)}
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 mb-3">
-                    {[
-                      { n: '247', l: 'Active Listings' },
-                      { n: '$1.2M', l: 'Avg Price' },
-                      { n: '18%', l: 'Tax Savings' },
-                      { n: '12', l: 'Markets' }
-                    ].map((s, i) => (
-                      <div key={i} className="bg-[#111] border border-border p-2">
-                        <div className="text-sm font-medium silver-gradient">{s.n}</div>
-                        <div className="text-[7px] text-[#444] uppercase tracking-widest mt-0.5">{s.l}</div>
-                      </div>
-                    ))}
-                  </div>
-                  {REAL_ESTATE_DATA.filter(r => 
-                    r.a.toLowerCase().includes(reSearch.toLowerCase()) || 
-                    r.s.toLowerCase().includes(reSearch.toLowerCase()) || 
-                    r.t.toLowerCase().includes(reSearch.toLowerCase())
-                  ).slice(0, 2).map((r, i) => (
-                    <div key={i} className="bg-[#0d0d0d] border border-border p-2 mb-2 flex justify-between items-center animate-fade-in">
-                      <div>
-                        <div className="text-[10px] text-[#888]">{r.a}</div>
-                        <div className="text-[8px] text-[#444] mt-0.5">{r.s}</div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-[11px] text-[#a0a0a0] font-medium">{r.p}</div>
-                        <div className="text-[7px] px-1.5 py-0.5 bg-card text-[#606060] border border-border mt-0.5">{r.t}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="p-12 flex flex-col justify-center">
-              <div className="flex items-center gap-2 font-mono text-[9px] tracking-[3px] text-dim uppercase mb-2">
-                Real Estate Intelligence 
-                <span className="px-2 py-0.5 bg-card text-sm border border-border">Live Demo</span>
-              </div>
-              <h3 className="font-display text-5xl tracking-[2px] text-foreground mb-2 leading-none uppercase">Real Estate<br />Module</h3>
-              <p className="text-sm text-dim font-light leading-[1.8] mb-7 max-w-[420px]">
-                An investor intelligence dashboard tracking listings, tax exposure, cash flow, and market signals across any city you want to target.
-              </p>
-              <div className="space-y-3 mb-7">
-                {[
-                  { i: '💰', t: 'Automatic Tax Estimates', d: 'Property tax, 1031 eligibility, depreciation flags on every listing — no more manual lookups' },
-                  { i: '🗺️', t: 'Custom City Targeting', d: 'Add any market — Sacramento, Stockton, Elk Grove, Bay Area. Your dashboard, your territory.' }
-                ].map((b, i) => (
-                  <div key={i} className="flex gap-3">
-                    <span className="text-lg shrink-0 mt-0.5">{b.i}</span>
-                    <div>
-                      <strong className="block text-[13px] font-medium text-sl">{b.t}</strong>
-                      <span className="text-xs text-dim font-light">{b.d}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <a href="#intake" className="inline-flex items-center px-6 py-3 bg-silver-gradient text-background font-mono text-[10px] tracking-[2px] uppercase font-medium hover:shadow-[0_0_22px_rgba(200,200,200,0.22)] hover:-translate-y-0.5 w-fit">Get This Built →</a>
-            </div>
-          </div>
-
-          {/* CONGRESSIONAL */}
-          <div className="bg-card grid lg:grid-cols-2 min-h-[460px] relative overflow-hidden group hover:bg-background transition-colors lg:direction-rtl">
-            <div className="absolute top-0 left-0 right-0 h-[1px] bg-silver-gradient scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500" />
-            <div className="p-9 flex items-center justify-center bg-[#060809] border-l border-border lg:direction-ltr">
-              <div className="w-full max-w-[340px] font-mono border border-[#151d1a] bg-[#060809] overflow-hidden">
-                <div className="flex items-center gap-2 px-3 py-2 bg-[#0d1117] border-b border-[#161b22]">
-                  <span className="text-sm font-semibold text-[#e6edf3] tracking-tighter">P<em className="not-italic text-[#3fb950]">c</em></span>
-                  <div className="flex-1 max-w-[120px] ml-4 bg-[#010409] border border-[#30363d] rounded flex items-center px-2 py-1">
-                    <Search size={8} className="text-[#8b949e] mr-1.5" />
-                    <input 
-                      type="text"
-                      className="w-full bg-transparent text-[8px] text-[#e6edf3] outline-none placeholder-[#484f58]"
-                      placeholder="Search member or symbol..."
-                      value={congressSearch}
-                      onChange={(e) => setCongressSearch(e.target.value)}
-                    />
-                  </div>
-                  <span className="text-[8px] text-[#3fb950] tracking-[2px] ml-auto">● LIVE</span>
-                </div>
-                <div className="bg-[#d29922]/10 border-l-2 border-[#d29922] p-2.5 m-2.5 text-[9px] text-[#d29922] tracking-tight">⚡ CLUSTER: 9 members bought NVDA this week — AI bill vote pending</div>
-                {CONGRESS_DATA.filter(r => 
-                  r.n.toLowerCase().includes(congressSearch.toLowerCase()) || 
-                  r.s.toLowerCase().includes(congressSearch.toLowerCase())
-                ).slice(0, 4).map((r, i) => (
-                  <div key={i} className="flex justify-between items-center px-2.5 py-2 border-b border-[#0d1117] text-[9px] animate-fade-in">
-                    <span className="text-[#8b949e]">{r.n}</span>
-                    <span className="text-[#58a6ff] font-semibold">{r.s}</span>
-                    <span className={`${r.c} font-semibold text-[8px]`}>{r.b}</span>
-                    <span className="text-[#8b949e] text-[8px]">{r.a}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="p-12 flex flex-col justify-center lg:direction-ltr">
-              <div className="flex items-center gap-2 font-mono text-[9px] tracking-[3px] text-dim uppercase mb-2">
-                Congressional Intelligence 
-                <span className="px-2 py-0.5 bg-card text-sm border border-border">Live Demo</span>
-              </div>
-              <h3 className="font-display text-5xl tracking-[2px] text-foreground mb-2 leading-none uppercase">Pc — Trade<br />Tracker</h3>
-              <p className="text-sm text-dim font-light leading-[1.8] mb-7 max-w-[420px]">
-                Every stock trade by every U.S. Senator and Congress member — all 535 of them — tracked from public STOCK Act filings. Free to browse. Pro gets alerts.
-              </p>
-              <div className="space-y-3 mb-7">
-                {[
-                  { i: '🔥', t: 'Cluster Alerts', d: '3+ members buy the same stock before a vote — that\'s the signal that matters' },
-                  { i: '📡', t: 'Free Government Data', d: 'congress.gov STOCK Act API — $0 data cost, fully public, fully legal' }
-                ].map((b, i) => (
-                  <div key={i} className="flex gap-3">
-                    <span className="text-lg shrink-0 mt-0.5">{b.i}</span>
-                    <div>
-                      <strong className="block text-[13px] font-medium text-sl">{b.t}</strong>
-                      <span className="text-xs text-dim font-light">{b.d}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="flex gap-3">
-                <a href="#" className="inline-flex items-center px-6 py-3 bg-silver-gradient text-background font-mono text-[10px] tracking-[2px] uppercase font-medium hover:shadow-[0_0_22px_rgba(200,200,200,0.22)] hover:-translate-y-0.5 w-fit">View Live Demo →</a>
-                <a href="#intake" className="inline-flex items-center px-6 py-3 bg-transparent text-sm font-mono text-[10px] tracking-[2px] uppercase border border-border hover:border-accent hover:bg-card transition-all">Get Pro Access</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Industries Grid */}
-      <section id="industries" className="py-20 px-6 md:px-12 bg-card relative z-10">
-        <div className="flex items-center gap-3 font-mono text-[10px] tracking-[4px] text-dim uppercase mb-3">
-          <div className="w-5 h-[1px] bg-dimmer" />
-          Industries We Serve
-        </div>
-        <h2 className="font-display text-[clamp(38px,5vw,62px)] leading-none tracking-[2px] text-foreground mb-0">
-          If You Work In It,<br /><span className="silver-gradient">We Can Automate It.</span>
-        </h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[2px] bg-card mt-10">
-          {[
-            { i: '⚖️', n: 'Law Firms', d: 'Intake forms, document assembly, client follow-up, billing summaries — eliminate the admin that buries attorneys.', f: 'Smart Intake · Doc Gen · Client Portal' },
-            { i: '🏠', n: 'Real Estate', d: 'Investor dashboards, listing alerts, tax analysis, cash flow calculators, and lead capture — any market, any niche.', f: 'Market Intel · Tax Calc · Lead Capture' },
-            { i: '🪵', n: 'Flooring & Tile', d: 'Takeoff calculators, bilingual quotes, supplier order lists, and homeowner estimate tools.', f: 'Takeoff · Spanish · Quote Gen' },
-            { i: '🔧', n: 'Home Services', d: 'HVAC, plumbing, electrical, roofing — estimate calculators, booking forms, automated follow-up.', f: 'Estimate · Booking · Follow-Up' },
-            { i: '🚛', n: 'Trucking & Fleet', d: 'Compliance tracking, CARB testing reminders, route optimization, driver document management.', f: 'Compliance · CARB · Scheduling' },
-            { i: '🏗️', n: 'Construction', d: 'Bid calculators, subcontractor tracking, project timelines, and homeowner remodel estimators.', f: 'Bid Calc · Lead Gen · Tracking' },
-            { i: '🏥', n: 'Medical & Dental', d: 'Patient intake, insurance pre-screening, appointment reminders, treatment plan summaries.', f: 'Intake · Insurance · Scheduling' },
-            { i: '📈', n: 'Finance & Investing', d: 'Portfolio dashboards, congressional trade trackers, market alerts, and client reporting.', f: 'Trade Tracking · Alerts · Reports' }
-          ].map((item, i) => (
-            <div key={i} className="bg-background p-7 hover:bg-background transition-colors group relative overflow-hidden">
-              <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-silver-gradient scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500" />
-              <div className="text-3xl mb-3">{item.i}</div>
-              <h3 className="font-display text-xl tracking-widest text-foreground mb-2 uppercase">{item.n}</h3>
-              <p className="text-xs text-dim font-light leading-relaxed mb-3">{item.d}</p>
-              <div className="font-mono text-[8px] text-dim tracking-widest uppercase mt-2">{item.f}</div>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* Products and Industries removed from landing- handled by SHOWCASE view */}
 
       {/* Founder Section */}
       <section className="py-24 px-6 md:px-12 bg-card border-t border-border relative overflow-hidden">
@@ -743,23 +543,23 @@ export default function App() {
           <div>
             <div className="flex items-center gap-3 font-mono text-[10px] tracking-[4px] text-dim uppercase mb-3">
               <div className="w-5 h-[1px] bg-[#2a2a2a]" />
-              Why This Works
+              {t.founder.tag}
             </div>
             <h2 className="font-display text-[clamp(40px,5vw,66px)] leading-[0.95] tracking-[2px] text-foreground mb-7 uppercase">
-              Most AI Agencies<br />Have Never Run<br /><span className="silver-gradient">A Real Business.</span>
+              {t.founder.title1}<br />{t.founder.title2}<br /><span className="silver-gradient">{t.founder.title3}</span>
             </h2>
             <div className="space-y-5 text-base font-light text-[#666] leading-[1.9]">
-              <p>I grew up in Charlestown, Massachusetts — where you don't learn things in a classroom, you learn them by doing. That shaped everything.</p>
-              <p>Before AI, I built a flooring company to <strong className="text-[#888] font-normal">$6–7 million in annual revenue</strong>. We laid floors in Marriott hotels, did custom residential work in Napa, and ran commercial projects across Trinidad and Tobago. I've done takeoffs by hand at midnight. I've chased invoices. I've hired and fired crews. I've watched jobs go sideways because of a spreadsheet error.</p>
+              <p>{t.founder.p1}</p>
+              <p>{t.founder.p2}</p>
               
               <div className="border-l-2 border-[#2a2a2a] px-7 py-5 my-7 relative bg-white/[0.015]">
                 <div className="absolute top-[-1px] left-0 right-0 h-[1px] bg-silver-gradient opacity-25" />
-                <p className="font-display text-[clamp(22px,2.5vw,30px)] tracking-widest text-foreground leading-[1.2] uppercase">I also know what it's like to go bankrupt when things break.</p>
+                <p className="font-display text-[clamp(22px,2.5vw,30px)] tracking-widest text-foreground leading-[1.2] uppercase">{t.founder.quote}</p>
               </div>
 
-              <p>I built Silverback AI because I've lived inside the problems we solve. Every tool we build has a real failure behind it — a real job site, a real invoice, a real moment where the right automation would have changed everything. That's not something you learn from a tutorial. That's something you earn.</p>
+              <p>{t.founder.p3}</p>
             </div>
-            <a href="#intake" className="inline-flex items-center gap-3 bg-silver-gradient text-background font-mono text-[11px] tracking-[2px] uppercase px-8 py-4 font-medium mt-9 transition-all hover:shadow-[0_0_18px_rgba(200,200,200,0.1)] hover:-translate-y-0.5" style={{ background: 'linear-gradient(135deg,#fff 0%,#a0a0a0 35%,#d8d8d8 60%,#787878 100%)' }}>Work With Someone Who Gets It →</a>
+            <a href="#intake" className="inline-flex items-center gap-3 bg-silver-gradient text-background font-mono text-[11px] tracking-[2px] uppercase px-8 py-4 font-medium mt-9 transition-all hover:shadow-[0_0_18px_rgba(200,200,200,0.1)] hover:-translate-y-0.5" style={{ background: 'linear-gradient(135deg,#fff 0%,#a0a0a0 35%,#d8d8d8 60%,#787878 100%)' }}>{t.founder.cta}</a>
           </div>
         </div>
       </section>
@@ -768,20 +568,20 @@ export default function App() {
       <section id="intake" className="py-20 px-6 md:px-12">
         <div className="grid lg:grid-cols-[1fr_1.2fr] gap-20 items-start">
           <div>
-            <div className="flex items-center gap-3 font-mono text-[10px] tracking-[4px] text-dim uppercase mb-3">
+            <div className="flex items-center gap-3 font-mono text-[12px] tracking-[4px] text-dim uppercase mb-3">
               <div className="w-5 h-[1px] bg-dimmer" />
-              Free Discovery
+              {t.intake.tag}
             </div>
             <h2 className="font-display text-[clamp(40px,5vw,66px)] leading-[0.95] tracking-[2px] text-foreground mb-4 uppercase">
-              Tell Us<br /><span className="silver-gradient">The Problem.</span>
+              {t.intake.title1}<br /><span className="silver-gradient">{t.intake.title2}</span>
             </h2>
-            <p className="text-sm text-dim font-light leading-[1.85] mb-6">Five questions. Four minutes. We find exactly what's costing you time — and build something that fixes it.</p>
+            <p className="text-sm text-dim font-light leading-[1.85] mb-6">{t.intake.desc}</p>
             <div className="space-y-2.5">
               {[
-                'Completely free · zero obligation',
-                'Any industry, any business size',
-                'Bryan responds within 24 hours',
-                'Custom plan — not a generic pitch'
+                t.intake.bullet1,
+                t.intake.bullet2,
+                t.intake.bullet3,
+                t.intake.bullet4
               ].map((c, i) => (
                 <div key={i} className="flex items-center gap-2.5 text-sm text-dim">
                   <div className="w-4.5 h-4.5 border border-dimmer bg-card flex items-center justify-center text-[9px] text-sm shrink-0">✓</div>
@@ -802,21 +602,16 @@ export default function App() {
                   const email = formData.get('email') || '';
                   const task = dreadedTask || 'None selected';
                   const body = `Name: ${name}\nEmail: ${email}\nDreaded Task: ${task}`;
-                  window.location.href = `mailto:fsu9913@gmail.com?subject=Silverback Intake Form Submission&body=${encodeURIComponent(body)}`;
+                  window.location.href = `mailto:bryan@silverbackai.agency?subject=Silverback Intake Form Submission&body=${encodeURIComponent(body)}`;
                   setFormSubmitted(true); 
                 }} 
                 className="space-y-4"
               >
                 <div className="border border-border p-5 md:p-6 bg-black/30 space-y-4" role="group" aria-labelledby="dreaded-task-label">
-                  <div className="font-mono text-[9px] tracking-[3px] text-dim uppercase" aria-hidden="true">// 01</div>
-                  <div id="dreaded-task-label" className="text-sm font-medium text-foreground leading-relaxed">What task do you dread most every week?</div>
+                  <div className="font-mono text-[11px] tracking-[3px] text-dim uppercase" aria-hidden="true">// 01</div>
+                  <div id="dreaded-task-label" className="text-sm font-medium text-foreground leading-relaxed">{t.intake.q1}</div>
                   <div className="space-y-1.5" role="radiogroup" aria-labelledby="dreaded-task-label">
-                    {[
-                      { l: 'A', t: 'Paperwork & Compliance', d: 'Forms, filings, reports — hours of zero value' },
-                      { l: 'B', t: 'Scheduling & Follow-Ups', d: 'Chasing people, confirming things, constant reminders' },
-                      { l: 'C', t: 'Spreadsheets & Data Entry', d: 'Same data in three places, copy-pasting all day' },
-                      { l: 'D', t: 'Customer Follow-Up & Sales', d: 'Leads slipping through the cracks' }
-                    ].map((o, i) => (
+                    {t.intake.options.map((o, i) => (
                       <button 
                         key={i} 
                         type="button" 
@@ -837,22 +632,38 @@ export default function App() {
                 </div>
 
                 <div className="border border-border p-5 md:p-6 bg-black/30 space-y-4" role="group" aria-labelledby="contact-info-label">
-                  <div className="font-mono text-[9px] tracking-[3px] text-dim uppercase" aria-hidden="true">// 02</div>
-                  <div id="contact-info-label" className="text-sm font-medium text-foreground leading-relaxed">Where do we reach you?</div>
+                  <div className="font-mono text-[11px] tracking-[3px] text-dim uppercase" aria-hidden="true">// 02</div>
+                  <div id="contact-info-label" className="text-sm font-medium text-foreground leading-relaxed">{t.intake.q2}</div>
                   <div>
-                    <label htmlFor="intake-name" className="sr-only">Your name</label>
-                    <input id="intake-name" name="name" type="text" placeholder="Your name *" required aria-required="true" className="w-full bg-transparent border-b border-border text-foreground font-light py-2.5 outline-none focus:border-accent transition-colors placeholder:text-dimmer" />
+                    <label htmlFor="intake-name" className="sr-only">{t.intake.namePlaceholder}</label>
+                    <input id="intake-name" name="name" type="text" placeholder={t.intake.namePlaceholder} required aria-required="true" className="w-full bg-transparent border-b border-border text-foreground font-light py-2.5 outline-none focus:border-accent transition-colors placeholder:text-dimmer" />
                   </div>
                   <div>
-                    <label htmlFor="intake-email" className="sr-only">Email address</label>
-                    <input id="intake-email" name="email" type="email" placeholder="Email *" required aria-required="true" className="w-full bg-transparent border-b border-border text-foreground font-light py-2.5 outline-none focus:border-accent transition-colors placeholder:text-dimmer" />
+                    <label htmlFor="intake-email" className="sr-only">{t.intake.emailPlaceholder}</label>
+                    <input id="intake-email" name="email" type="email" placeholder={t.intake.emailPlaceholder} required aria-required="true" className="w-full bg-transparent border-b border-border text-foreground font-light py-2.5 outline-none focus:border-accent transition-colors placeholder:text-dimmer" />
                   </div>
                 </div>
 
                 <button type="submit" aria-label="Submit Form and Send Email" className="w-full bg-silver-gradient text-background py-4 font-display text-xl tracking-[3px] uppercase hover:shadow-[0_0_32px_rgba(200,200,200,0.22)] hover:-translate-y-0.5 transition-all" style={{ background: 'linear-gradient(135deg,#fff 0%,#a0a0a0 35%,#d8d8d8 60%,#787878 100%)' }}>
-                  Submit — Let's Solve This →
+                  {t.intake.submit}
                 </button>
-                <div className="font-mono text-[9px] text-dimmer text-center tracking-widest uppercase mt-2" aria-hidden="true">// No pitch · No spam · Bryan responds within 24 hours</div>
+                <div className="mt-8 pt-8 border-t border-border/50 text-center">
+                  <div className="font-mono text-[10px] tracking-[4px] text-accent mb-3 uppercase">Ready for a Full Move?</div>
+                  <p className="text-sm text-dim leading-relaxed mb-6 max-w-[400px] mx-auto">Skip the back-and-forth. Get a full company efficiency audit for <strong>$500</strong>. Bryan will personally audit your ops and jump on a call to go over your custom plan.</p>
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      const email = "bryan@silverbackai.agency";
+                      const subject = "Requesting $500 Company Audit";
+                      const body = "Hi Bryan, I'd like to request a full company efficiency audit for $500 as discussed on the site.";
+                      window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                    }}
+                    className="inline-flex items-center gap-2 bg-accent/20 text-accent border border-accent/40 px-6 py-2.5 font-mono text-[10px] tracking-[2px] uppercase hover:bg-accent hover:text-black transition-all"
+                  >
+                    Request $500 Audit <TrendingUp size={12} />
+                  </button>
+                </div>
+                <div className="font-mono text-[9px] text-dimmer text-center tracking-widest uppercase mt-4" aria-hidden="true">// No pitch · No spam · Bryan responds within 24 hours</div>
               </form>
             ) : (
               <motion.div 
@@ -861,8 +672,8 @@ export default function App() {
                 className="text-center py-12 px-7 border border-border bg-white/[0.02]"
               >
                 <div className="text-5xl mb-4">🦍</div>
-                <h3 className="font-display text-4xl tracking-widest silver-gradient uppercase mb-3">We've Got You.</h3>
-                <p className="text-sm text-dim leading-relaxed">Your answers are in. Bryan reviews everything personally and reaches out within 24 hours with a specific plan — not a generic pitch.<br /><br />Go do something you actually want to do.</p>
+                <h3 className="font-display text-4xl tracking-widest silver-gradient uppercase mb-3">{t.intake.successTitle}</h3>
+                <p className="text-sm text-dim leading-relaxed whitespace-pre-line">{t.intake.successDesc}</p>
               </motion.div>
             )}
           </div>
@@ -870,19 +681,19 @@ export default function App() {
       </section>
 
       {/* Footer */}
-      <footer className="py-10 px-6 md:px-12 border-t border-border flex flex-wrap justify-between items-center gap-5 relative z-10">
+      <footer className="py-12 px-6 md:px-12 border-t border-border flex flex-wrap justify-between items-center gap-10 relative z-10 bg-card/30">
         <div className="flex items-center gap-3">
-          <div className="logo-hex w-7 h-7 flex items-center justify-center text-background font-bold text-sm">🦍</div>
+          <div className="logo-hex w-10 h-10 flex items-center justify-center text-background font-bold text-lg">🦍</div>
           <div>
-            <div className="font-display text-lg tracking-[4px] silver-gradient-2 uppercase">Silverback AI</div>
-            <div className="font-mono text-[9px] text-dimmer tracking-widest uppercase mt-0.5">silverbackai.agent</div>
+            <div className="font-display text-2xl tracking-[4px] silver-gradient-2 uppercase">Silverback AI</div>
+            <div className="font-mono text-[11px] text-dim tracking-widest uppercase mt-0.5">silverbackai.agency</div>
           </div>
         </div>
-        <div className="font-display text-lg tracking-[3px] text-dimmer uppercase">What Keeps You Up At Night?</div>
-        <div className="font-mono text-[9px] text-dimmer text-right uppercase tracking-widest leading-relaxed">
-          Boston · Miami · Silicon Valley<br />
-          © 2025 Silverback AI<br />
-          <a href="mailto:bryan@silverbackai.com" className="hover:text-dim transition-colors">bryan@silverbackai.com</a>
+        <div className="font-display text-2xl tracking-[3px] text-dim uppercase">{t.footer.tagline}</div>
+        <div className="font-mono text-xs text-dim text-right uppercase tracking-widest leading-relaxed">
+          {t.footer.locations}<br />
+          © 2026 Silverback AI<br />
+          <a href="mailto:bryan@silverbackai.agency" className="text-accent underline underline-offset-4 hover:text-white transition-colors">bryan@silverbackai.agency</a>
         </div>
       </footer>
           </>
@@ -890,31 +701,31 @@ export default function App() {
           <main className="dashboard px-6 md:px-12 pt-28 pb-20 max-w-7xl mx-auto">
             <header className="stats-grid">
               <div className="stat-card group hover:border-accent transition-colors">
-                <label>Total Collected</label>
+                <label>{t.dashboard.collected}</label>
                 <div className="value">$42,950</div>
               </div>
               <div className="stat-card group hover:border-red-500/50 transition-colors">
-                <label className="text-red-400">Outstanding</label>
+                <label className="text-red-400">{t.dashboard.outstanding}</label>
                 <div className="value text-red-500">$4,200</div>
               </div>
             </header>
 
             <section className="table-container glow-shadow">
               <div className="p-6 border-b border-border flex justify-between items-center">
-                <h3 className="font-display text-2xl tracking-widest uppercase silver-gradient">Tenant Ledger</h3>
+                <h3 className="font-display text-2xl tracking-widest uppercase silver-gradient">{t.dashboard.ledger}</h3>
                 <div className="flex gap-2">
-                  <div className="px-3 py-1 bg-card border border-border text-[10px] font-mono uppercase tracking-widest text-dim">Filter: All Properties</div>
+                  <div className="px-3 py-1 bg-card border border-border text-[10px] font-mono uppercase tracking-widest text-dim">{lang === 'EN' ? 'Filter: All Properties' : 'Filtro: Todas las Propiedades'}</div>
                 </div>
               </div>
               <div className="overflow-x-auto">
                 <table>
                   <thead>
                     <tr>
-                      <th>Unit</th>
-                      <th>Tenant</th>
-                      <th>Status</th>
-                      <th>Rent</th>
-                      <th>Actions</th>
+                      <th>{t.dashboard.unit}</th>
+                      <th>{t.dashboard.tenant}</th>
+                      <th>{t.dashboard.status}</th>
+                      <th>{t.dashboard.rent}</th>
+                      <th>{t.dashboard.actions}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -924,13 +735,13 @@ export default function App() {
                         <td className="font-medium">{item.tenant}</td>
                         <td>
                           <span className={`badge ${item.status} ${isDarkMode ? 'chip-glow' : ''}`}>
-                            {item.status}
+                            {item.status === 'paid' ? (lang === 'EN' ? 'paid' : 'pagado') : (lang === 'EN' ? 'late' : 'tarde')}
                           </span>
                         </td>
                         <td className="font-mono">${item.rent.toLocaleString()}</td>
                         <td>
                           <button className="text-[10px] font-mono uppercase tracking-widest px-4 py-2 border border-border hover:bg-card hover:border-accent transition-all">
-                            GENERATE NOTICE
+                            {t.dashboard.generateNotice}
                           </button>
                         </td>
                       </tr>
@@ -970,7 +781,7 @@ export default function App() {
                   >
                     🦍
                   </motion.div>
-                  <div className="pt-0.5">Dave, I see 3 units are past the 5-day grace period. Should I draft the notices?</div>
+                  <div className="pt-0.5">{t.dashboard.msg1}</div>
                 </div>
                 <div className="msg bot flex gap-2.5 items-start">
                   <motion.div 
@@ -980,11 +791,11 @@ export default function App() {
                   >
                     🦍
                   </motion.div>
-                  <div className="pt-0.5">I've also analyzed the Ruby property expenses. You're over-budget on landscaping by 12%.</div>
+                  <div className="pt-0.5">{t.dashboard.msg2}</div>
                 </div>
               </div>
               <div className="ai-input">
-                <input type="text" placeholder="Ask McGilla..." className="placeholder:text-dimmer" />
+                <input type="text" placeholder={t.dashboard.askBot} className="placeholder:text-dimmer" />
                 <button className="text-dim hover:text-accent transition-colors"><Send size={16} /></button>
               </div>
             </aside>

@@ -18,33 +18,33 @@
 
 @layer base {
   :root {
-    --color-background: #f8f8f8;
-    --color-foreground: #1a1a1a;
+    --color-background: #fdfdfd;
+    --color-foreground: #0a0a0a;
     --color-card: #ffffff;
-    --color-border: rgba(0, 0, 0, 0.1);
-    --color-dim: #333333;
-    --color-dimmer: #666666;
+    --color-border: rgba(0, 0, 0, 0.12);
+    --color-dim: #262626;
+    --color-dimmer: #4d4d4d;
     --color-accent: #00F0FF;
     --color-gold: #D4AF37;
     --font-size-base: 16px;
   }
 
   .dark {
-    --color-background: #080808;
+    --color-background: #050505;
     --color-foreground: #ffffff;
-    --color-card: #121212;
-    --color-border: rgba(255, 255, 255, 0.15);
-    --color-dim: #a0a0a0;
-    --color-dimmer: #707070;
+    --color-card: #0f0f0f;
+    --color-border: rgba(255, 255, 255, 0.2);
+    --color-dim: #e5e5e5;
+    --color-dimmer: #a3a3a3;
     --color-accent: #00F0FF;
     --color-gold: #D4AF37;
     --font-size-base: 18px; /* Larger font in dark mode */
   }
 
-  /* Accessibility improvement: higher contrast for light mode */
+  /* Remove duplicate root block to keep definitions clean and high-contrast */
   :root {
-    --color-dim: #444444;
-    --color-dimmer: #777777;
+    --color-dim: #1a1a1a;
+    --color-dimmer: #404040;
   }
 
   ::selection {
@@ -82,25 +82,25 @@
 }
 
 .silver-gradient {
-  background: linear-gradient(135deg, #444 0%, #1a1a1a 35%, #555 60%, #000 100%);
+  background: linear-gradient(135deg, #333 0%, #000 35%, #444 60%, #000 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .dark .silver-gradient {
-  background: linear-gradient(135deg, #fff 0%, #a0a0a0 35%, #d8d8d8 60%, #787878 100%);
+  background: linear-gradient(135deg, #fff 0%, #d8d8d8 35%, #ffffff 60%, #a0a0a0 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .silver-gradient-2 {
-  background: linear-gradient(135deg, #666 0%, #333 40%, #555 65%, #222 100%);
+  background: linear-gradient(135deg, #555 0%, #1a1a1a 40%, #444 65%, #000 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .dark .silver-gradient-2 {
-  background: linear-gradient(135deg, #c8c8c8 0%, #787878 40%, #b0b0b0 65%, #505050 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #c0c0c0 40%, #f0f0f0 65%, #909090 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
