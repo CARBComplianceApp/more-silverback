@@ -158,41 +158,39 @@ export default function App() {
             </a>
           </div>
 
-          <div className="brand-toggle hidden lg:flex items-stretch overflow-visible h-14 bg-black/20 rounded-none border border-white/5 p-0">
+          <div className="brand-toggle hidden lg:flex items-stretch overflow-visible h-16 bg-black/20 rounded-none border border-white/5 p-0 divide-x divide-white/5">
               <button 
-                className={`flex flex-col items-center justify-center gap-0.5 min-w-[70px] ${view === 'SILVERBACK' ? 'active-portal' : ''}`} 
+                className={`flex flex-col items-center justify-center gap-1 min-w-[100px] hover:bg-white/5 transition-all ${view === 'SILVERBACK' ? 'active-portal bg-white/10' : ''}`} 
                 onClick={() => setView('SILVERBACK')}
               >
-                <div className="text-[16px]">🦍</div>
+                <div className="text-[18px]">🦍</div>
                 <div className="text-[10px] font-bold tracking-[2px] whitespace-pre-line text-center">{t.nav.problemSolver}</div>
               </button>
               <button 
-                className={`flex flex-col items-center justify-center gap-0.5 min-w-[70px] ${view === 'SHOWCASE' ? 'active-portal' : ''}`} 
+                className={`flex flex-col items-center justify-center gap-1 min-w-[100px] hover:bg-white/5 transition-all ${view === 'SHOWCASE' ? 'active-portal bg-white/10' : ''}`} 
                 onClick={() => setView('SHOWCASE')}
               >
-                <div className="text-[16px]">⚡</div>
+                <div className="text-[18px]">⚡</div>
                 <div className="text-[10px] font-bold tracking-[2px] whitespace-pre-line text-center">{t.nav.clientTools}</div>
               </button>
               <button 
-                className={`flex flex-col items-center justify-center gap-0.5 min-w-[70px] ${view === 'RENTDMC' ? 'active' : ''}`} 
+                className={`flex flex-col items-center justify-center gap-1 min-w-[80px] hover:bg-white/5 transition-all ${view === 'RENTDMC' ? 'active-portal bg-white/10' : ''}`} 
                 onClick={() => setView('RENTDMC')}
               >
-                <span className="text-[12px] opacity-70">||</span>
                 <span className="text-[10px] font-bold tracking-[1px]">{t.nav.rentDmc}</span>
-                <span className="text-[12px] opacity-70">||</span>
               </button>
               <button 
-                className={`flex flex-col items-center justify-center gap-0.5 min-w-[70px] ${view === 'TOOLKIT' ? 'active' : ''}`} 
+                className={`flex flex-col items-center justify-center gap-1 min-w-[100px] hover:bg-white/5 transition-all ${view === 'TOOLKIT' ? 'active-portal bg-white/10' : ''}`} 
                 onClick={() => setView('TOOLKIT')}
               >
-                <Zap size={14} className="text-orange-400" />
+                <Zap size={16} className="text-orange-400" />
                 <span className="text-[10px] font-bold tracking-[1px] text-center leading-[1.1] whitespace-pre-line">{t.nav.requestAudit}</span>
               </button>
               <button 
-                className={`flex flex-col items-center justify-center gap-0.5 min-w-[70px] ${view === 'ADMIN' ? 'active' : ''}`} 
+                className={`flex flex-col items-center justify-center gap-1 min-w-[80px] hover:bg-white/5 transition-all ${view === 'ADMIN' ? 'active-portal bg-white/10' : ''}`} 
                 onClick={() => setView('ADMIN')}
               >
-                <Lock size={14} className="opacity-60" />
+                <Lock size={16} className="opacity-60" />
                 <span className="text-[10px] font-bold tracking-[1px]">{t.nav.admin}</span>
               </button>
             </div>
@@ -337,7 +335,13 @@ export default function App() {
           </motion.div>
         )}
 
-        <div className="max-w-[1000px] relative z-10">
+        <div className="max-w-[1000px] relative z-10 pt-24 pb-12">
+          {/* BREAKDOWN OPTIONS */}
+          <div className="flex gap-4 mb-10">
+            <button className="px-6 py-2 border border-accent/50 text-accent font-mono text-[11px] uppercase tracking-widest hover:bg-accent/10">I'm an Owner</button>
+            <button className="px-6 py-2 border border-border text-dim font-mono text-[11px] uppercase tracking-widest hover:border-accent/40">It's a Department Issue</button>
+          </div>
+
           <motion.div
             initial={{ opacity: 0, y: 26 }}
             animate={{ opacity: 1, y: 0 }}
@@ -404,13 +408,15 @@ export default function App() {
             </div>
             {/* NARRATIVE SECTION */}
             <div className="bg-accent/5 border border-accent/20 p-6 mb-10">
-              <h3 className="font-display text-lg tracking-widest uppercase mb-2 silver-gradient">Why this matters</h3>
+              <h3 className="font-display text-lg tracking-widest uppercase mb-2 silver-gradient">What keeps you up at night?</h3>
               <p className="text-dim text-[13px] font-light leading-relaxed mb-4">
-                We automate the manual work that kills your productivity. By centralizing your workflows into custom-built AI systems, our partners typically save <strong className="text-foreground">10–20 hours a week</strong> on tasks that used to require manual oversight. It's not just about speed; it's about reclaiming your time for high-value growth.
+                You're missing family dinners to handle manual work that <strong className="text-foreground">shouldn't exist</strong>. 
+                Our AI systems reclaim 10–20 hours a week from the repetitive chaos, 
+                giving you back your weekends and accelerating business growth.
               </p>
               <div className="flex gap-4 items-center">
                  <div className="p-2 border border-accent/20 text-xs">🚀</div>
-                 <div className="text-[10px] text-accent font-mono uppercase tracking-widest">Typical ROI: 10 hrs saved / week</div>
+                 <div className="text-[10px] text-accent font-mono uppercase tracking-widest">Reclaim your time · Growth-focused</div>
               </div>
             </div>
 

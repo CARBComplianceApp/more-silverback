@@ -85,7 +85,7 @@ export default function SmsToolkit({ initialTab = 'sms', isAdmin = false }: { in
   const [formAnswers, setFormAnswers] = useState<Record<string, string>>({});
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const totalSteps = 7;
+  const totalSteps = 9;
 
   const copyText = (id: string, text: string) => {
     navigator.clipboard.writeText(text).then(() => {
