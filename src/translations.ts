@@ -87,6 +87,33 @@ export const translations = {
     footer: {
       tagline: "What Keeps You Up At Night?",
       locations: "Boston · Miami · Silicon Valley"
+    },
+    faq: {
+      tag: "Frequently Asked Questions",
+      title1: "Clear",
+      title2: "Answers.",
+      questions: [
+        {
+          q: "What exactly does a $500 discovery audit include?",
+          a: "We do a deep dive into your current processes, identify the bottlenecks draining your time, and map out a custom AI automation plan tailored to your business. No generic pitches, just a concrete roadmap."
+        },
+        {
+          q: "Do I need to be tech-savvy to use your solutions?",
+          a: "Not at all. We build tools that integrate directly into the workflows you already use (like SMS, email, or simple web dashboards). If you can send a text, you can use our AI."
+        },
+        {
+          q: "How fast can we see ROI from an automation?",
+          a: "Depending on the complexity, our systems are often deployed within weeks, saving you 10-20 hours from day one. The ROI is immediate when you stop doing manual data entry."
+        },
+        {
+          q: "Is our company data secure?",
+          a: "Absolute security is our baseline. We build isolated environments using enterprise-grade security protocols, meaning your data is never used to train public AI models."
+        },
+        {
+          q: "Will AI replace my team?",
+          a: "No. Our goal is to replace the robotic work your team hates doing, allowing them to focus on high-value human tasks like building relationships and closing deals."
+        }
+      ]
     }
   },
   ES: {
@@ -177,6 +204,33 @@ export const translations = {
     footer: {
       tagline: "¿Qué te quita el sueño?",
       locations: "Boston · Miami · Silicon Valley"
+    },
+    faq: {
+      tag: "Preguntas Frecuentes",
+      title1: "Claridad",
+      title2: "Ante Todo.",
+      questions: [
+        {
+          q: "¿Qué incluye exactamente la auditoría de descubrimiento de $500?",
+          a: "Hacemos un análisis profundo de sus procesos actuales, identificamos los cuellos de botella que agotan su tiempo y trazamos un plan de automatización de IA personalizado. Sin discursos genéricos, solo una hoja de ruta concreta."
+        },
+        {
+          q: "¿Necesito conocimientos técnicos para usar sus soluciones?",
+          a: "En absoluto. Construimos herramientas que se integran directamente en los flujos de trabajo que ya usa (como SMS, correo electrónico o paneles web simples). Si puede enviar un mensaje de texto, puede usar nuestra IA."
+        },
+        {
+          q: "¿Qué tan rápido veremos el retorno de inversión (ROI)?",
+          a: "Dependiendo de la complejidad, nuestros sistemas a menudo se implementan en semanas, ahorrándole de 10 a 20 horas desde el primer día. El ROI es inmediato cuando deja de hacer ingresos de datos manuales."
+        },
+        {
+          q: "¿Están seguros los datos de nuestra empresa?",
+          a: "La seguridad absoluta es nuestra base. Construimos entornos aislados utilizando protocolos de seguridad de nivel empresarial, lo que significa que sus datos nunca se utilizan para entrenar modelos de IA públicos."
+        },
+        {
+          q: "¿La IA reemplazará a mi equipo?",
+          a: "No. Nuestro objetivo es reemplazar el trabajo robótico que su equipo odia hacer, permitiéndoles enfocarse en tareas humanas de alto valor como construir relaciones y cerrar ventas."
+        }
+      ]
     }
   }
 };

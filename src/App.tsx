@@ -10,6 +10,7 @@ import {
   Shield, 
   Cpu, 
   ChevronRight, 
+  ChevronDown,
   Globe, 
   Lock, 
   ArrowRight,
@@ -99,6 +100,7 @@ export default function App() {
 
   const [dreadedTask, setDreadedTask] = useState('');
   const [isSlayed, setIsSlayed] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const heroRef = useRef(null);
   
   const { scrollYProgress } = useScroll({
@@ -592,6 +594,50 @@ export default function App() {
             </div>
             <a href="#intake" className="inline-flex items-center gap-3 bg-silver-gradient text-background font-mono text-[11px] tracking-[2px] uppercase px-8 py-4 font-medium mt-9 transition-all hover:shadow-[0_0_18px_rgba(200,200,200,0.1)] hover:-translate-y-0.5" style={{ background: 'linear-gradient(135deg,#fff 0%,#a0a0a0 35%,#d8d8d8 60%,#787878 100%)' }}>{t.founder.cta}</a>
           </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-24 px-6 md:px-12 max-w-[900px] mx-auto">
+        <div className="flex items-center gap-3 font-mono text-[10px] tracking-[4px] text-dim uppercase mb-3 justify-center">
+          <div className="w-5 h-[1px] bg-[#2a2a2a]" />
+          {t.faq.tag}
+          <div className="w-5 h-[1px] bg-[#2a2a2a]" />
+        </div>
+        <h2 className="font-display text-[clamp(36px,5vw,56px)] leading-[0.95] tracking-[2px] text-foreground mb-16 text-center uppercase">
+          {t.faq.title1} <span className="silver-gradient">{t.faq.title2}</span>
+        </h2>
+        
+        <div className="space-y-4">
+          {t.faq.questions.map((faqItem: {q: string; a: string}, i: number) => (
+            <div key={i} className="border border-border bg-card/30 overflow-hidden transition-colors hover:border-accent/40">
+              <button 
+                onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                className="w-full text-left px-6 py-6 flex items-center justify-between gap-4 group"
+              >
+                <div className="font-medium text-lg md:text-xl leading-tight group-hover:text-accent transition-colors">
+                  {faqItem.q}
+                </div>
+                <div className={`shrink-0 transition-transform duration-300 transform ${openFaq === i ? 'rotate-180 text-accent' : 'text-dim'}`}>
+                  <ChevronDown size={24} />
+                </div>
+              </button>
+              <AnimatePresence>
+                {openFaq === i && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="px-6 pb-6 pt-0 text-dim font-light leading-relaxed border-t border-border/30 mt-2 pt-4">
+                      {faqItem.a}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
         </div>
       </section>
 
