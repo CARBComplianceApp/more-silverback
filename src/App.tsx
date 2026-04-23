@@ -389,6 +389,31 @@ export default function App() {
             transition={{ duration: 0.8, delay: 0.8 }}
             className="mt-12 max-w-[500px]"
           >
+            {/* MODULE CHIPS */}
+            <div className="flex flex-wrap gap-2 mb-8">
+               {[
+                 { t: 'Talk to Expert', c: 'border-accent/30 text-accent hover:bg-accent/10' },
+                 { t: 'Email Support', c: 'border-border text-dim hover:border-accent hover:text-accent' },
+                 { t: 'Chat McGilla', c: 'border-border text-dim hover:border-accent hover:text-accent' }
+               ].map((chip) => (
+                 <button key={chip.t} className={`flex items-center gap-2 border px-4 py-2 font-mono text-[10px] uppercase tracking-widest transition-all ${chip.c}`}>
+                   {chip.t === 'Chat McGilla' ? <span className="text-[14px]">🦍</span> : null}
+                   {chip.t}
+                 </button>
+               ))}
+            </div>
+            {/* NARRATIVE SECTION */}
+            <div className="bg-accent/5 border border-accent/20 p-6 mb-10">
+              <h3 className="font-display text-lg tracking-widest uppercase mb-2 silver-gradient">Why this matters</h3>
+              <p className="text-dim text-[13px] font-light leading-relaxed mb-4">
+                We automate the manual work that kills your productivity. By centralizing your workflows into custom-built AI systems, our partners typically save <strong className="text-foreground">10–20 hours a week</strong> on tasks that used to require manual oversight. It's not just about speed; it's about reclaiming your time for high-value growth.
+              </p>
+              <div className="flex gap-4 items-center">
+                 <div className="p-2 border border-accent/20 text-xs">🚀</div>
+                 <div className="text-[10px] text-accent font-mono uppercase tracking-widest">Typical ROI: 10 hrs saved / week</div>
+              </div>
+            </div>
+
             <div className="flex items-center gap-3 font-mono text-[10px] tracking-[0.3em] text-accent uppercase mb-4">
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
               {t.hero.phase01}

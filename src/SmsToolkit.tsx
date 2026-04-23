@@ -362,6 +362,18 @@ export default function SmsToolkit({ initialTab = 'sms', isAdmin = false }: { in
               </p>
             </div>
 
+            {/* NARRATIVE SECTION */}
+            <div className="bg-accent/5 border border-accent/20 p-6 mb-8">
+              <h3 className="font-display text-lg tracking-widest uppercase mb-2 silver-gradient">List any other time killers and maybe how you receive something that makes it harder on you.</h3>
+              <p className="text-dim text-[13px] font-light leading-relaxed mb-4">
+                We automate the manual work that kills your productivity. By centralizing your workflows into custom-built AI systems, our partners typically save <strong className="text-foreground">10–20 hours a week</strong> on tasks that used to require manual oversight. It's not just about speed; it's about reclaiming your time for high-value growth.
+              </p>
+              <div className="flex gap-4 items-center">
+                 <div className="p-2 border border-accent/20 text-xs">🚀</div>
+                 <div className="text-[10px] text-accent font-mono uppercase tracking-widest">Typical ROI: 10 hrs saved / week</div>
+              </div>
+            </div>
+
             {!formSubmitted ? (
               <div className="max-w-3xl">
                 {/* Progress bar */}
