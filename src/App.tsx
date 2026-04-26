@@ -151,13 +151,13 @@ export default function App() {
         {/* Navigation */}
         <nav className="fixed top-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-xl border-b border-border px-6 md:px-12 py-3 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <a href="#" className="flex items-center gap-3 group">
-              <div className="w-9 h-9 flex items-center justify-center rounded bg-zinc-900 border border-accent/30 shadow-[0_0_15px_rgba(0,240,255,0.3)] group-hover:shadow-[0_0_20px_rgba(0,240,255,0.5)] transition-all">
-                <span className="text-xl brightness-110 drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]">🦍</span>
+            <a href="#" className="flex items-center gap-4 group shrink-0">
+              <div className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center rounded bg-zinc-900 border border-accent/30 shadow-[0_0_15px_rgba(0,240,255,0.3)] group-hover:shadow-[0_0_20px_rgba(0,240,255,0.5)] transition-all">
+                <span className="text-2xl md:text-4xl brightness-110 drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]">🦍</span>
               </div>
               <div className="flex flex-col leading-[0.75] mt-1">
-                <span className="font-display text-[22px] tracking-[0.2em] silver-gradient hover:brightness-125 transition-all uppercase">SILVERBACK</span>
-                <span className="font-display text-[22px] tracking-[0.2em] silver-gradient hover:brightness-125 transition-all uppercase">AI</span>
+                <span className="font-display text-[24px] md:text-[32px] tracking-[0.2em] silver-gradient hover:brightness-125 transition-all uppercase">SILVERBACK</span>
+                <span className="font-display text-[24px] md:text-[32px] tracking-[0.2em] silver-gradient hover:brightness-125 transition-all uppercase">AI</span>
               </div>
             </a>
           </div>
@@ -360,22 +360,6 @@ export default function App() {
         )}
 
         <div className="max-w-[1000px] relative z-10 pt-24 pb-12">
-          {/* BREAKDOWN OPTIONS */}
-          <div className="flex gap-4 mb-10">
-            <button className="px-6 py-2 border border-accent/50 text-accent font-mono text-[11px] uppercase tracking-widest hover:bg-accent/10">I'm an Owner</button>
-            <button className="px-6 py-2 border border-border text-dim font-mono text-[11px] uppercase tracking-widest hover:border-accent/40">It's a Department Issue</button>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 26 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex items-center gap-3 font-mono text-[11px] tracking-[0.4em] text-accent/60 uppercase mb-8"
-          >
-            <div className="w-7 h-[1px] bg-accent/30" />
-            {t.hero.sub}
-          </motion.div>
-          
           <motion.h1
             id="hero-heading"
             initial={{ opacity: 0, y: 26 }}
@@ -388,7 +372,7 @@ export default function App() {
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mt-2 w-full">
               <span className="silver-gradient italic leading-[1.0] lg:text-[clamp(42px,7vw,110px)]">{t.hero.title2}</span>
               
-              <div className="hidden lg:block font-sans text-[13px] normal-case tracking-normal text-dim font-light max-w-[180px] leading-[1.6] pb-2 text-wrap text-right">
+              <div className="hidden lg:block font-sans text-base lg:text-lg normal-case tracking-normal text-dim font-light max-w-[240px] leading-[1.6] pb-2 text-wrap text-right">
                 {lang === 'EN' ? 'Simplified, transparent AI systems starting with a' : 'Sistemas de IA simplificados y transparentes que comienzan con una'} <strong className="font-medium text-foreground">{lang === 'EN' ? '$500 discovery audit.' : 'auditoría de descubrimiento de $500.'}</strong>
               </div>
             </div>
