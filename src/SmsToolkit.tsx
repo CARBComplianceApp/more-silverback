@@ -136,7 +136,7 @@ export default function SmsToolkit({ initialTab = 'sms', isAdmin = false }: { in
               className={`px-6 py-2.5 font-mono text-[11px] tracking-[0.15em] uppercase transition-all rounded-sm duration-300 ${
                 activeTab === tab.id 
                   ? 'bg-accent text-black font-extrabold shadow-md transform scale-[1.02]' 
-                  : 'text-dim hover:text-foreground hover:bg-white/10 hover:shadow-sm'
+                  : 'text-dim hover:text-foreground hover:bg-foreground/5 hover:shadow-sm'
               }`}
               onClick={() => setActiveTab(tab.id as any)}
             >
