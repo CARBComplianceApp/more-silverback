@@ -124,7 +124,7 @@ export default function SmsToolkit({ initialTab = 'sms', isAdmin = false }: { in
 
       {/* TABS */}
       {isAdmin && (
-        <div className="flex flex-wrap gap-1 mb-10 bg-card p-1 rounded w-fit border border-border">
+        <div className="flex flex-wrap gap-1 mb-10 bg-card p-1 rounded w-fit border border-border overflow-hidden">
           {[
             { id: 'guide', label: 'Audit Guide' },
             { id: 'sms', label: 'SMS Funnel' },
@@ -133,9 +133,14 @@ export default function SmsToolkit({ initialTab = 'sms', isAdmin = false }: { in
           ].map((tab) => (
             <button
               key={tab.id}
-              className={`px-6 py-2.5 font-mono text-[11px] tracking-widest uppercase transition-all rounded-sm ${activeTab === tab.id ? 'bg-accent text-black font-bold shadow-sm' : 'text-dim hover:text-foreground'}`}
+              className={`px-6 py-2.5 font-mono text-[11px] tracking-[0.15em] uppercase transition-all rounded-sm duration-300 ${
+                activeTab === tab.id 
+                  ? 'bg-accent text-black font-extrabold shadow-md transform scale-[1.02]' 
+                  : 'text-dim hover:text-foreground hover:bg-white/10 hover:shadow-sm'
+              }`}
               onClick={() => setActiveTab(tab.id as any)}
             >
+              {activeTab === tab.id && <span className="font-extrabold opacity-70 mr-2">►</span>}
               {tab.label}
             </button>
           ))}

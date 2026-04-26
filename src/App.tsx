@@ -35,6 +35,7 @@ import {
 } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
 import { translations, Language } from './translations';
+import { useFeatureFlags } from './lib/featureFlags';
 import SmsToolkit from './SmsToolkit';
 import HotButton from './HotButton';
 import AILab from './components/AILab';
@@ -73,6 +74,7 @@ export default function App() {
   const [heroImage, setHeroImage] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const { flags } = useFeatureFlags();
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const saved = localStorage.getItem('silverback_theme');
     return saved ? saved === 'dark' : true;
@@ -161,40 +163,50 @@ export default function App() {
           </div>
 
           <div className="brand-toggle hidden lg:flex items-stretch overflow-visible h-16 bg-black/20 rounded-none border border-white/5 p-0 divide-x divide-white/5">
-              <button 
-                className={`flex flex-col items-center justify-center gap-1 min-w-[100px] hover:bg-white/5 transition-all ${view === 'SILVERBACK' ? 'active-portal bg-white/10' : ''}`} 
-                onClick={() => setView('SILVERBACK')}
-              >
-                <div className="text-[18px]">🦍</div>
-                <div className="text-[10px] font-bold tracking-[2px] whitespace-pre-line text-center">{t.nav.problemSolver}</div>
-              </button>
-              <button 
-                className={`flex flex-col items-center justify-center gap-1 min-w-[100px] hover:bg-white/5 transition-all ${view === 'SHOWCASE' ? 'active-portal bg-white/10' : ''}`} 
-                onClick={() => setView('SHOWCASE')}
-              >
-                <div className="text-[18px]">⚡</div>
-                <div className="text-[10px] font-bold tracking-[2px] whitespace-pre-line text-center">{t.nav.clientTools}</div>
-              </button>
-              <button 
-                className={`flex flex-col items-center justify-center gap-1 min-w-[80px] hover:bg-white/5 transition-all ${view === 'RENTDMC' ? 'active-portal bg-white/10' : ''}`} 
-                onClick={() => setView('RENTDMC')}
-              >
-                <span className="text-[10px] font-bold tracking-[1px]">{t.nav.rentDmc}</span>
-              </button>
-              <button 
-                className={`flex flex-col items-center justify-center gap-1 min-w-[100px] hover:bg-white/5 transition-all ${view === 'TOOLKIT' ? 'active-portal bg-white/10' : ''}`} 
-                onClick={() => setView('TOOLKIT')}
-              >
-                <Zap size={16} className="text-orange-400" />
-                <span className="text-[10px] font-bold tracking-[1px] text-center leading-[1.1] whitespace-pre-line">{t.nav.requestAudit}</span>
-              </button>
-              <button 
-                className={`flex flex-col items-center justify-center gap-1 min-w-[80px] hover:bg-white/5 transition-all ${view === 'ADMIN' ? 'active-portal bg-white/10' : ''}`} 
-                onClick={() => setView('ADMIN')}
-              >
-                <Lock size={16} className="opacity-60" />
-                <span className="text-[10px] font-bold tracking-[1px]">{t.nav.admin}</span>
-              </button>
+              {flags.enable_silverback && (
+                <button 
+                  className={`flex flex-col items-center justify-center gap-1 min-w-[100px] hover:bg-white/5 transition-all ${view === 'SILVERBACK' ? 'active-portal bg-white/10' : ''}`} 
+                  onClick={() => setView('SILVERBACK')}
+                >
+                  <div className="text-[18px]">🦍</div>
+                  <div className="text-[10px] font-bold tracking-[2px] whitespace-pre-line text-center">{t.nav.problemSolver}</div>
+                </button>
+              )}
+              {flags.enable_showcase && (
+                <button 
+                  className={`flex flex-col items-center justify-center gap-1 min-w-[100px] hover:bg-white/5 transition-all ${view === 'SHOWCASE' ? 'active-portal bg-white/10' : ''}`} 
+                  onClick={() => setView('SHOWCASE')}
+                >
+                  <div className="text-[18px]">⚡</div>
+                  <div className="text-[10px] font-bold tracking-[2px] whitespace-pre-line text-center">{t.nav.clientTools}</div>
+                </button>
+              )}
+              {flags.enable_rentdmc && (
+                <button 
+                  className={`flex flex-col items-center justify-center gap-1 min-w-[80px] hover:bg-white/5 transition-all ${view === 'RENTDMC' ? 'active-portal bg-white/10' : ''}`} 
+                  onClick={() => setView('RENTDMC')}
+                >
+                  <span className="text-[10px] font-bold tracking-[1px]">{t.nav.rentDmc}</span>
+                </button>
+              )}
+              {flags.enable_toolkit && (
+                <button 
+                  className={`flex flex-col items-center justify-center gap-1 min-w-[100px] hover:bg-white/5 transition-all ${view === 'TOOLKIT' ? 'active-portal bg-white/10' : ''}`} 
+                  onClick={() => setView('TOOLKIT')}
+                >
+                  <Zap size={16} className="text-orange-400" />
+                  <span className="text-[10px] font-bold tracking-[1px] text-center leading-[1.1] whitespace-pre-line">{t.nav.requestAudit}</span>
+                </button>
+              )}
+              {flags.enable_admin && (
+                <button 
+                  className={`flex flex-col items-center justify-center gap-1 min-w-[80px] hover:bg-white/5 transition-all ${view === 'ADMIN' ? 'active-portal bg-white/10' : ''}`} 
+                  onClick={() => setView('ADMIN')}
+                >
+                  <Lock size={16} className="opacity-60" />
+                  <span className="text-[10px] font-bold tracking-[1px]">{t.nav.admin}</span>
+                </button>
+              )}
             </div>
 
           <div className="flex items-center gap-4 md:gap-8">
@@ -256,36 +268,46 @@ export default function App() {
             >
               <div className="flex flex-col gap-8 text-2xl font-display font-bold uppercase tracking-widest">
                 <div className="flex flex-col gap-4 mb-4">
-                  <button 
-                    className={`text-left ${view === 'SILVERBACK' ? 'silver-gradient' : 'text-dim'} text-4xl`}
-                    onClick={() => { setView('SILVERBACK'); setIsMenuOpen(false); }}
-                  >
-                    🦍 {t.nav.problemSolver.replace('\n', ' ')}
-                  </button>
-                  <button 
-                    className={`text-left ${view === 'SHOWCASE' ? 'silver-gradient' : 'text-dim'} text-4xl`}
-                    onClick={() => { setView('SHOWCASE'); setIsMenuOpen(false); }}
-                  >
-                    ⚡ {t.nav.clientTools.replace('\n', ' ')}
-                  </button>
-                  <button 
-                    className={`text-left ${view === 'RENTDMC' ? 'silver-gradient' : 'text-dim'} text-4xl`}
-                    onClick={() => { setView('RENTDMC'); setIsMenuOpen(false); }}
-                  >
-                    || {t.nav.rentDmc} ||
-                  </button>
-                  <button 
-                    className={`text-left ${view === 'TOOLKIT' ? 'silver-gradient' : 'text-dim'} text-4xl`}
-                    onClick={() => { setView('TOOLKIT'); setIsMenuOpen(false); }}
-                  >
-                    ⚡ {t.nav.requestAudit.replace('\n', ' ')}
-                  </button>
-                  <button 
-                    className={`text-left ${view === 'ADMIN' ? 'silver-gradient' : 'text-dim'} text-4xl`}
-                    onClick={() => { setView('ADMIN'); setIsMenuOpen(false); }}
-                  >
-                    🔒 {t.nav.admin}
-                  </button>
+                  {flags.enable_silverback && (
+                    <button 
+                      className={`text-left ${view === 'SILVERBACK' ? 'silver-gradient' : 'text-dim'} text-4xl`}
+                      onClick={() => { setView('SILVERBACK'); setIsMenuOpen(false); }}
+                    >
+                      🦍 {t.nav.problemSolver.replace('\n', ' ')}
+                    </button>
+                  )}
+                  {flags.enable_showcase && (
+                    <button 
+                      className={`text-left ${view === 'SHOWCASE' ? 'silver-gradient' : 'text-dim'} text-4xl`}
+                      onClick={() => { setView('SHOWCASE'); setIsMenuOpen(false); }}
+                    >
+                      ⚡ {t.nav.clientTools.replace('\n', ' ')}
+                    </button>
+                  )}
+                  {flags.enable_rentdmc && (
+                    <button 
+                      className={`text-left ${view === 'RENTDMC' ? 'silver-gradient' : 'text-dim'} text-4xl`}
+                      onClick={() => { setView('RENTDMC'); setIsMenuOpen(false); }}
+                    >
+                      || {t.nav.rentDmc} ||
+                    </button>
+                  )}
+                  {flags.enable_toolkit && (
+                    <button 
+                      className={`text-left ${view === 'TOOLKIT' ? 'silver-gradient' : 'text-dim'} text-4xl`}
+                      onClick={() => { setView('TOOLKIT'); setIsMenuOpen(false); }}
+                    >
+                      ⚡ {t.nav.requestAudit.replace('\n', ' ')}
+                    </button>
+                  )}
+                  {flags.enable_admin && (
+                    <button 
+                      className={`text-left ${view === 'ADMIN' ? 'silver-gradient' : 'text-dim'} text-4xl`}
+                      onClick={() => { setView('ADMIN'); setIsMenuOpen(false); }}
+                    >
+                      🔒 {t.nav.admin}
+                    </button>
+                  )}
                 </div>
                 <hr className="border-border" />
                 <a href="#intake" onClick={() => setIsMenuOpen(false)} className="text-3xl silver-gradient">{t.nav.questionnaire}</a>
