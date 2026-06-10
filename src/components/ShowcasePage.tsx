@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Search, TrendingUp, Shield, Zap, Sparkles, LayoutGrid, ArrowLeft } from 'lucide-react';
+import { Search, TrendingUp, Shield, Zap, Sparkles, LayoutGrid, ArrowLeft, Layers } from 'lucide-react';
 
 interface ShowcasePageProps {
   onBack: () => void;
@@ -9,6 +9,13 @@ interface ShowcasePageProps {
 
 export default function ShowcasePage({ onBack, onSelectTool }: ShowcasePageProps) {
   const tools = [
+    { 
+      id: 'OROZCO_LANDSCAPING', 
+      name: 'Orozco Landscaping', 
+      desc: 'Polished local operations page with live estimate spreadsheet portal.',
+      icon: <Layers className="text-emerald-500" />,
+      tag: 'OPERATIONS'
+    },
     { 
       id: 'PC_INVESTMENTS', 
       name: 'PC Investments', 

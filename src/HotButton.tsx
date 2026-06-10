@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Sparkles, Copy, Check } from 'lucide-react';
 
 const HOT_BUTTONS = [
   {
@@ -102,8 +103,43 @@ const HOT_BUTTONS = [
 
 export default function HotButton() {
   const [activeTab, setActiveTab] = useState(HOT_BUTTONS[0].id);
+  const [pitchLoading, setPitchLoading] = useState(false);
+  const [generatedPitch, setGeneratedPitch] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const activeData = HOT_BUTTONS.find(b => b.id === activeTab);
+
+  const simulatePitchGeneration = (name: string) => {
+    setPitchLoading(true);
+    setGeneratedPitch(null);
+    setCopied(false);
+    
+    setTimeout(() => {
+      setPitchLoading(false);
+      const pitches: Record<string, string> = {
+        convenience: "Tired of manual copy-paste chores? We will hook up automated triggers that replace 10 hours of spreadsheet admin with a simple button click. Save your energy for what matters.",
+        culture: "Hello! We've custom-built an AI localization pipeline that automatically structures support outreach to preserve your team's unique cultural values across every language.",
+        ego: "Flawless hands-off execution. Stay focused exclusively on high-level decisions while our background AI handles 100% of the administrative grind without asking questions.",
+        prestige: "Bespoke high-end communication suites. Our elegant AI engine ensures that every quote proposal and automatic invoice projects absolute elite branding and pristine design first.",
+        family: "Get home in time for family dinners. We deploy a tireless automatic assistant that answers 90%+ of quote requests in under 30 seconds so you can turn off your phone on the weekend.",
+        finance: "Slash operational overhead instantly. Reclaim missed off-shift leads and reduce manual support costs using precise, pre-programmed AI responders from day one.",
+        investment: "Build compounding digital systems. Our CRM pipelines scale with your business-appreciating assets that manage 10x lead volumes without breaking or requiring extra staff.",
+        love: "Empathetic, instant connection. Our automatic response triage guarantees that every customer feels cared for with highly polite, instant, and warm answers.",
+        recreation: "Let's automate the boring stuff so you can head out to the pool. Our automated recipes handle report exports and invoicing behind the scenes while you relax.",
+        security: "Rock-solid compliance and safety. We set up isolated code actions that run with perfect accuracy, locking down error rates to zero and keeping client databases secure.",
+        privacy: "Qualify your leads completely in private background buffers. Stop dealing with noisy cold calls or public lists—keep your records secure and quiet in isolated modules.",
+        sex: 'Frictionless instant gratification. Bring in ready-to-pay prospects using automatic scheduling tools that book clients in under 30 seconds. Fast, flawless, and modern.'
+      };
+      setGeneratedPitch(pitches[activeTab] || `Custom outreach copy designed specifically for ${name} target audiences.`);
+    }, 1200);
+  };
+
+  const copyToClipboard = () => {
+    if (!generatedPitch) return;
+    navigator.clipboard.writeText(generatedPitch);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground pt-24 pb-20 px-6 md:px-12 relative overflow-hidden">
@@ -155,18 +191,43 @@ export default function HotButton() {
           </motion.div>
         </div>
 
-        <h2 className="font-display text-3xl tracking-[3px] uppercase mb-8">The 12 Core Motivators</h2>
+        <h2 className="font-display text-2xl tracking-[3px] uppercase mb-6">The 12 Core Motivators</h2>
+
+        {/* Mobile Tactile Selector Dropdown (Touch Targets >= 44px) - Sized perfectly for mobile responsive viewports */}
+        <div className="block lg:hidden mb-6">
+          <label htmlFor="motivator-select" className="block text-[10px] font-mono uppercase tracking-widest text-accent mb-2">
+            // Select Motivator Profile:
+          </label>
+          <select
+            id="motivator-select"
+            value={activeTab}
+            onChange={(e) => {
+              setActiveTab(e.target.value);
+              setGeneratedPitch(null);
+            }}
+            className="w-full bg-card border border-border p-4 text-sm font-mono tracking-widest uppercase text-foreground outline-none focus:border-accent min-h-[44px] cursor-pointer"
+          >
+            {HOT_BUTTONS.map((btn) => (
+              <option key={btn.id} value={btn.id}>
+                {btn.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
         {/* Interactive Motivator Matrix */}
         <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
           
-          {/* Sidebar Tabs */}
-          <div className="flex flex-row lg:flex-col gap-2 overflow-x-auto pb-4 lg:pb-0 hide-scrollbar">
+          {/* Sidebar Tabs - Hidden on Mobile to prioritize Touch Select Dropdown */}
+          <div className="hidden lg:flex flex-col gap-2">
             {HOT_BUTTONS.map((btn) => (
               <button
                 key={btn.id}
-                onClick={() => setActiveTab(btn.id)}
-                className={`text-left px-5 py-3.5 font-mono text-[11px] tracking-widest uppercase transition-all whitespace-nowrap lg:whitespace-normal border ${
+                onClick={() => {
+                  setActiveTab(btn.id);
+                  setGeneratedPitch(null);
+                }}
+                className={`text-left px-5 py-4 font-mono text-[11px] tracking-widest uppercase transition-all border min-h-[44px] ${
                   activeTab === btn.id 
                   ? 'bg-accent text-background font-bold border-accent shadow-[0_0_15px_rgba(0,240,255,0.2)]' 
                   : 'bg-card border-border text-dim hover:text-foreground hover:border-dim'
@@ -178,52 +239,97 @@ export default function HotButton() {
           </div>
 
           {/* Content Pane */}
-          <div className="bg-card border border-border p-8 md:p-12 relative min-h-[400px]">
+          <div className="bg-card border border-border p-6 md:p-12 relative min-h-[440px] flex flex-col justify-between">
              {/* Large faded text graphic */}
-             <div className="absolute right-4 bottom-4 font-display text-[150px] leading-none text-border opacity-30 select-none pointer-events-none overflow-hidden">
+             <div className="absolute right-4 bottom-4 font-display text-[70px] sm:text-[150px] leading-none text-border opacity-[0.04] sm:opacity-[0.08] select-none pointer-events-none overflow-hidden uppercase">
                {activeData?.name}
              </div>
 
              <AnimatePresence mode="wait">
-               {activeData && (
-                 <motion.div
-                   key={activeData.id}
-                   initial={{ opacity: 0, x: 10 }}
-                   animate={{ opacity: 1, x: 0 }}
-                   exit={{ opacity: 0, x: -10 }}
-                   transition={{ duration: 0.3 }}
-                   className="relative z-10"
-                 >
-                   <h3 className="font-display text-4xl tracking-[2px] uppercase mb-4">{activeData.name}</h3>
-                   <p className="text-lg font-light text-foreground mb-10 pb-6 border-b border-border">
-                     {activeData.desc}
-                   </p>
+                {activeData && (
+                  <motion.div
+                    key={activeData.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
+                    className="relative z-10 flex-grow"
+                  >
+                    <h3 className="font-display text-3xl sm:text-4xl tracking-[2px] uppercase mb-4 text-foreground">{activeData.name}</h3>
+                    <p className="text-base sm:text-lg font-light text-foreground/90 mb-8 pb-6 border-b border-border leading-relaxed font-sans">
+                      {activeData.desc}
+                    </p>
 
-                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-                     <div className="space-y-3">
-                       <h4 className="font-mono text-[10px] tracking-[0.2em] text-accent uppercase flex items-center gap-2">
-                         <span className="w-1.5 h-1.5 bg-accent rounded-full"/> What They Want
-                       </h4>
-                       <p className="font-light text-sm text-dim leading-relaxed">{activeData.wants}</p>
-                     </div>
-                     <div className="space-y-3">
-                       <h4 className="font-mono text-[10px] tracking-[0.2em] text-red-400 uppercase flex items-center gap-2">
-                         <span className="w-1.5 h-1.5 bg-red-400 rounded-full"/> Things to Avoid
-                       </h4>
-                       <p className="font-light text-sm text-dim leading-relaxed">{activeData.avoids}</p>
-                     </div>
-                   </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                      <div className="space-y-3">
+                        <h4 className="font-mono text-[10px] tracking-[0.2em] text-accent uppercase flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 bg-accent rounded-full"/> What They Want
+                        </h4>
+                        <p className="font-light text-sm text-dim leading-relaxed">{activeData.wants}</p>
+                      </div>
+                      <div className="space-y-3">
+                        <h4 className="font-mono text-[10px] tracking-[0.2em] text-red-400 uppercase flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 bg-red-400 rounded-full"/> Things to Avoid
+                        </h4>
+                        <p className="font-light text-sm text-dim leading-relaxed">{activeData.avoids}</p>
+                      </div>
+                    </div>
 
-                   <div className="bg-background border border-border p-6 rounded-sm">
-                     <h4 className="font-mono text-[10px] tracking-[0.2em] text-foreground uppercase mb-4 opacity-70">
-                       // How AI removes their barriers
-                     </h4>
-                     <p className="text-foreground leading-relaxed">
-                       {activeData.aiSolution}
-                     </p>
-                   </div>
-                 </motion.div>
-               )}
+                    <div className="bg-background border border-border p-6 rounded-sm mb-8">
+                      <h4 className="font-mono text-[10px] tracking-[0.2em] text-foreground uppercase mb-3 opacity-70">
+                        // How AI removes their barriers
+                      </h4>
+                      <p className="text-sm text-foreground/95 leading-relaxed font-sans">
+                        {activeData.aiSolution}
+                      </p>
+                    </div>
+
+                    {/* DYNAMIC COPYWRITING EXPERT GENERATOR */}
+                    <div className="border-t border-border pt-6 mt-6">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                        <div>
+                          <h4 className="font-display text-sm tracking-widest uppercase mb-1 flex items-center gap-2 text-foreground">
+                            <Sparkles size={14} className="text-accent animate-spin" />
+                            AI Motivated Pitch Generator
+                          </h4>
+                          <p className="text-xs text-dim font-light">Draft unique customer sales outreach copy targeting the {activeData.name} profile drivers.</p>
+                        </div>
+                        <button
+                          onClick={() => simulatePitchGeneration(activeData.name)}
+                          aria-label={`Generate sales pitch targeting ${activeData.name} drivers`}
+                          aria-busy={pitchLoading}
+                          disabled={pitchLoading}
+                          className="font-mono text-[10px] font-bold uppercase tracking-widest border border-accent text-accent px-4 py-2.5 bg-accent/5 hover:bg-accent hover:text-background active:scale-95 transition-all self-start sm:self-center shrink-0 min-h-[44px]"
+                        >
+                          {pitchLoading ? 'Drafting Neural Prose...' : 'Draft Sales Pitch'}
+                        </button>
+                      </div>
+
+                      <AnimatePresence mode="wait">
+                        {generatedPitch && (
+                          <motion.div 
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -5 }}
+                            className="bg-accent/5 border border-accent/20 p-4 rounded-sm relative group animate-pulse"
+                          >
+                            <p className="text-xs font-mono text-accent mb-2 uppercase tracking-widest">// Outreach Pitch:</p>
+                            <p className="text-sm font-sans text-foreground italic leading-relaxed pr-8">
+                              "{generatedPitch}"
+                            </p>
+                            <button
+                              onClick={copyToClipboard}
+                              aria-label="Copy outreach pitch text to clipboard"
+                              className="absolute right-4 top-4 p-2.5 bg-background border border-border hover:border-accent text-dim hover:text-accent rounded-sm transition-all min-h-[36px] min-w-[36px] flex items-center justify-center cursor-pointer"
+                            >
+                              {copied ? <Check size={14} className="text-accent" /> : <Copy size={14} />}
+                            </button>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </motion.div>
+                )}
              </AnimatePresence>
           </div>
 

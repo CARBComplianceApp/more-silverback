@@ -10,6 +10,7 @@ export type FeatureFlags = {
   enable_pc_investments: boolean;
   enable_ai_lab: boolean;
   enable_hot_button: boolean;
+  enable_orozco_landscaping: boolean;
 };
 
 const defaultFlags: FeatureFlags = {
@@ -22,6 +23,7 @@ const defaultFlags: FeatureFlags = {
   enable_pc_investments: true,
   enable_ai_lab: true,
   enable_hot_button: true,
+  enable_orozco_landscaping: true,
 };
 
 export function useFeatureFlags() {
